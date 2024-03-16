@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="styles/AddProduct.css">
+</head>
+<body>
+
+    <!-- start video, navbar, logo, widget -->
+
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="images/global2.mp4" type="video/mp4">
+        </video>
+    </div>
+    <nav>
+        <div class="nav-bar">
+        <a href="Contact.html">Contact Us</a>
+        <a href="About.html">About Us</a>
+        <a href="LogIn.html">Cart</a>
+        <a href="SignUp.html">Log Out</a>
+        </div>
+    </nav>
+    <div class="logo">
+        <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
+    </div>
+    <div id="widget">
+        <a href="index.html">
+        <img src="images/homepage.png" alt="Image" id="widget-image"></a>
+    </div>
+
+        <!-- end video, navbar, logo, widget -->
+
+        <!-- start left form -->
+
+    <div class="container left">
+        <form id="assetForm" action="/addAsset" method="POST" style="margin-top: -190px;">
+            <h2>Adding New Digital Asset</h2><br>
+            <input type="text" name="Category" placeholder="Category" required><br><br>
+            <input type="text" name="Name Digital Asset" placeholder="Name Digital Asset" required><br><br>
+            <input type="text" name="Place" placeholder="Place" required><br><br>
+            <input type="date" name="Date" placeholder="Date" required><br><br>
+            <input type="time" name="Time" placeholder="Time" required><br><br>
+            <input type="number" name="Quantity" placeholder="Quantity" required><br><br>
+            <input type="number" name="Price" placeholder="Price" required><br><br>
+            <input type="image" name="Upload Digital Asset" placeholder="Upload Digital Asset" required><br><br><br>
+            <input type="submit" value="Add Asset" id="add-button">
+        </form>
+        <div class="conformation" style="display: none;">
+            <p>Asset Added Successfully<br></p>
+        </div>
+    </div>
+
+            <!-- end right form -->
+
+            <!-- start right form -->
+
+            <div class="container right">
+                <h1>Menu</h1>
+                <div class="ProfilePic" id="ProfilePic">
+                    <img src="images/adir.jpg" alt="ProfilePic">
+                </div>
+                <form id="assetForm" action="/addAsset" method="POST" style="margin-top: 120px;">
+                    <br><br><br><br><h2>Hi, Adir</h2>
+                    <a class="choosed-button">Add New Digital Asset</a>
+                    <a href="History.html" class="menu-button">Buy & Sell History</a>
+                    <a href="Edit.html" class="menu-button">Edit Details</a>
+                </form>
+            </div>
+
+      <!-- end right form -->
+      <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+      <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+</body>
+
+<script>
+
+    // Clear all input fields
+    function clearFields() {
+      $('#Category').val('');
+      $('#NameDigitalAsset').val('');
+      $('#Place').val('');
+      $('#Date').val('');
+      $('#Time').val('');
+      $('#Quantity').val('');
+      $('#Price').val('');
+      $('#ImageOfAsset').val('');
+    }
+
+    // Event listener for the form submission
+    $('#assetForm').submit(function (e) {
+      e.preventDefault();
+
+      // Get the form data
+      var formData = $(this).serialize();
+
+  // Send a POST request to the server
+  $.post('/addAsset', formData, function(response) {
+    if (response.coinAdded) {
+      // Show the confirmation message
+      // $('.container').hide();
+      $('.conformation').show();
+      clearFields();
+    }
+  }).fail(function(error) {
+    console.error('Error adding asset:', error);
+  });
+});
+  </script>
+
+</html>

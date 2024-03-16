@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History</title>
+    <link rel="stylesheet" href="styles/History.css">
+</head>
+<body>
+
+    <!-- start video, navbar, logo, widget -->
+
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="images\Digital.mp4" type="video/mp4">
+        </video>
+    </div>
+    <nav>
+        <div class="nav-bar">
+        <a href="Contact.html">Contact Us</a>
+        <a href="About.html">About Us</a>
+        <a href="LogIn.html">Cart</a>
+        <a href="SignUp.html">Log Out</a>
+        </div>
+    </nav>
+    <div class="logo">
+        <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
+    </div>
+    <div id="widget">
+        <a href="index.html">
+        <img src="images/homepage.png" alt="Image" id="widget-image"></a>
+    </div>
+
+        <!-- end video, navbar, logo, widget -->
+
+        <!-- start left form -->
+
+  <div class="container left">
+    <h1 style="margin-top: -300px;">Transaction History</h1>
+    <div class="search-container">
+      <div>
+        <label for="DateTrans">Search by Date:</label>
+        <input type="date" id="DateTrans" style="width: 150px;">
+      </div>
+      <div>
+        <label for="BuyerSeller">Search by Buyer/Seller</label>
+        <input type="text" id="BuyerSeller">
+      </div>
+      <div>
+        <label for="BuyerSeller">Search by Buyer/Seller</label>
+        <input type="text" id="BuyerSeller">
+      </div>
+      <div class="price-slider">
+        <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
+        <input type="range" id="price" name="price" min="0" max="5000" value="200">
+    </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID Trans.</th>
+          <th>Purchase/Sale</th>
+          <th>Price</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>ID Buyer/Seller</th>
+          <th>Name Buyer/Seller</th>
+        </tr>
+      </thead>
+      <tbody id="tradeTableBody">
+        <!-- Trades will be dynamically added here -->
+      </tbody>
+    </table>
+  </div>
+
+            <!-- end right form -->
+
+            <!-- start right form -->
+
+            <div class="container right">
+                <h1>Menu</h1>
+                <div class="ProfilePic" id="ProfilePic">
+                    <img src="images/adir.jpg" alt="ProfilePic">
+                </div>
+                <form style="margin-top: 120px;">
+                    <br><br><br><br><h2>Hi, Adir</h2>
+                    <a href="AddProduct.html" class="menu-button">Add New Digital Asset</a>
+                    <a class="choosed-button">Buy & Sell History</a>
+                    <a href="Edit.html" class="menu-button">Edit Details</a>
+                </form>
+            </div>
+
+      <!-- end right form -->
+
+      <script> /* slide bar */
+        const priceSlider = document.getElementById("price");
+        const priceValue = document.getElementById("price-value");
+        
+        priceSlider.addEventListener("input", function() {
+            priceValue.textContent = this.value / 2; // הצגת חצי הערך שנבחר
+        });
+        </script>
+<script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+<div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+</body>
+</html>

@@ -1,0 +1,188 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.logo {
+  position: fixed;
+  max-height: 60px; /* גובה מרבי של הלוגו */
+  max-width: 90%; /* רוחב מרבי של הלוגו */
+  top: 20px; /* מרחק מהגבול העליון של המסך */
+  left: 20px; /* מרחק מהגבול השמאלי של המסך */
+  z-index: 999; /* מבטיח שהלוגו יוצג מעל כל שאר האלמנטים בעמוד */
+}
+
+#widget {
+  background-color: rgb(59, 64, 156);
+  width: 50px; /* רוחב */
+  height: 50px; /* גובה */
+  border-radius: 50%; /* צורת העיגול */
+  position: fixed; /* כדי להצמיד אותו לצד הימני */
+  top: 20px; /* מרחק מהלמעלה */
+  right: 20px; /* מרחק מצד ימין */
+  cursor: pointer; /* כדי להראות שמדובר בכפתור שניתן ללחיצה */
+  display: flex; /* כדי לאפשר מרכוז תוכן בתוך העיגול */
+  justify-content: center; /* מרכוז תוכן אופקית בתוך העיגול */
+  align-items: center; /* מרכוז תוכן אנכית בתוך העיגול */
+  color: white; /* צבע הטקסט בתוך העיגול */
+  font-weight: bold; /* משקל הגופן */
+}
+
+#widget img {
+  max-width: 80%; /* קיטון התמונה */
+  max-height: 80%; /* קיטון התמונה */
+  border-radius: 50%; /* לשמור על צורת העיגול */
+  display: block;
+  margin: auto; /* מרכז את התמונה באופן אוטומטי בתוך העיגול */
+}
+
+.top-section {
+  background-color: #bfe7f1; /* צבע תכלת לשליש העליון */
+  height: 20vh
+}
+
+.middle-section {
+  height: 50vh;
+  position: relative; /* כדי להוסיף הרחבות בעת מוצבת בתוכה */
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+
+}
+
+.bottom-section {
+  background-color: #bfe7f1; /* צבע תכלת לשליש התחתון */
+  height: 30vh
+}
+
+.middle-section video {
+  width: 100%; /* למלא את כל המשטח */
+  height: 100%; /* למלא את כל המשטח */
+  object-fit: cover; /* שימוש ברוחב וגובה כדי למלא את האלמנט */
+  position: absolute; /* לאפשר הרכבת כפרט */
+  top: 0; /* להתחיל מלמעלה של האלמנט האב */
+  left: 0; /* להתחיל מהשמאל של האלמנט האב */
+}
+
+.centered-text {  /* About us */
+  text-align: center;
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgb(30, 37, 102); /* צבע הטקסט */
+  font-family: "Arial", "sans-serif";
+  font-size: 24px; /* גודל גופן רגיל */
+  font-weight: bold;
+}
+
+.text-box {
+  position: fixed;
+  top: 8%;
+  left: calc(20%); /* מרכז החלק התחתון */
+  width: 58%; /* רוחב של החלק האמצעי */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: rgb(24, 29, 71); /* צבע הטקסט */
+  text-align: center;
+  margin-top: 100px;
+  max-width: 1350px;
+  padding-left: 20px; /* זיזת הטקסט קצת ימינה */
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
+  backdrop-filter: blur(40px);  /*blur effect*/
+  -webkit-backdrop-filter: blur(40px); /*blur effect*/
+  border-radius: 20px;
+  border:1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  font-family: "Arial", "sans-serif";
+  font-size: 15px; /* גודל גופן רגיל */
+  font-weight: bold;
+}
+
+.manager {
+  width: 200px; /* רוחב התמונה */
+  height: 200px; /* גובה התמונה */
+  border-radius: 50%; /* יצירת עיגול */
+  overflow: hidden; /* הסתרת חלקים מיותרים של התמונה */
+  position: absolute; /* להציב את התמונות במקום מדוייק על המסך */
+  top: calc(50% + 5%); /* מרכז על פי הרקע */
+  text-align: center; /* מרכוז טקסט באופן אופקי */
+}
+
+#manager1 {
+  left: calc(50% - 250px); /* מוניטית שמאלית מהמרכז */
+}
+
+#manager2 {
+  left: calc(50% + 50px); /* מוניטית ימנית מהמרכז */
+}
+
+.manager img {
+  width: 100%; /* מילוי כל המשטח של העיגול עם התמונה */
+  height: auto; /* שמירת יחסי גובה */
+}
+
+.manager p {
+  margin-top: -40px; /* מרווח מעל לטקסט */
+  color: rgb(0, 0, 0); /* צבע טקסט לבן */
+}
+.title1{
+  position: fixed; /* הגדרת המיקום לקבוע על המסך */
+  bottom: 40px; /* הגדרת המרחק מהתחתון של המסך */
+  left: 50%; /* הגדרת מיקום אופקי לאמצע המסך */
+  transform: translateX(-145%); /* הזזת האלמנט למרכז המסך */
+  color: rgb(38, 32, 90); /* צבע הטקסט */
+  padding: 10px 20px; /* ריווחים פנימיים */
+  font-family: "Arial", "sans-serif";
+  font-size: 16px; /* גודל גופן רגיל */
+  font-weight: bold;
+}
+
+.title2{
+  position: fixed; /* הגדרת המיקום לקבוע על המסך */
+  bottom: 40px; /* הגדרת המרחק מהתחתון של המסך */
+  left: 50%; /* הגדרת מיקום אופקי לאמצע המסך */
+  transform: translateX(45%); /* הזזת האלמנט למרכז המסך */
+  color: #1e1852;
+  padding: 10px 20px; /* ריווחים פנימיים */
+  font-family: "Arial", "sans-serif";
+  font-size: 16px; /* גודל גופן רגיל */
+  font-weight: bold;
+}
+
+.linkedin-section {
+  position: fixed;
+  bottom: 10px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  font-family: "Arial", "sans-serif";
+  font-size: 16px; /* גודל גופן רגיל */
+  font-weight: bold;
+}
+
+.linkedin-section img {
+  width: 30px;
+  height: auto;
+  margin-left: 8px;
+
+}
+
+.linkedin-section p {
+  margin: 0;
+}
+
+.back-to-home {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: rgb(43, 50, 109); /* צבע הטקסט */
+  color: #fff;
+  padding: 10px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-family: "Arial", "sans-serif";
+  font-weight: bold;
+}

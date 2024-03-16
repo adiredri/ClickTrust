@@ -1,0 +1,137 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    padding: 0;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+  }
+
+  .logo {
+    position: relative;
+    max-height: 70px; /* גובה מרבי של הלוגו */
+    max-width: 92%; /* רוחב מרבי של הלוגו */
+    top: 10px; /* מרחק מהגבול העליון של המסך */
+    left: -290px; /* מרחק מהגבול השמאלי של המסך */
+    z-index: 1000; /* מבטיח שהלוגו יוצג מעל כל שאר האלמנטים בעמוד */
+}
+  #widget {
+    background-color: rgb(59, 64, 156);
+    width: 50px; /* רוחב */
+    height: 50px; /* גובה */
+    border-radius: 50%; /* צורת העיגול */
+    position: fixed; /* כדי להצמיד אותו לצד הימני */
+    top: 20px; /* מרחק מהלמעלה */
+    right: 20px; /* מרחק מצד ימין */
+    cursor: pointer; /* כדי להראות שמדובר בכפתור שניתן ללחיצה */
+    display: flex; /* כדי לאפשר מרכוז תוכן בתוך העיגול */
+    justify-content: center; /* מרכוז תוכן אופקית בתוך העיגול */
+    align-items: center; /* מרכוז תוכן אנכית בתוך העיגול */
+    color: white; /* צבע הטקסט בתוך העיגול */
+    font-weight: bold; /* משקל הגופן */
+}
+
+#widget img {
+    max-width: 80%; /* קיטון התמונה */
+    max-height: 80%; /* קיטון התמונה */
+    border-radius: 50%; /* לשמור על צורת העיגול */
+    display: block;
+    margin: auto; /* מרכז את התמונה באופן אוטומטי בתוך העיגול */
+}
+
+.video-background {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -100;
+}
+
+.video-background video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 20px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+ul {
+    margin-top: 0;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+.text-box {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    text-align: left;
+    margin-top: 60px;
+    margin-bottom:70px;
+    max-width: 1350px;
+    padding-left: 20px; /* זיזת הטקסט קצת ימינה */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
+    backdrop-filter: blur(40px);  /*blur effect*/
+    -webkit-backdrop-filter: blur(40px); /*blur effect*/
+    border-radius: 20px;
+    border:1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+  .title {
+    font-size: 50px;
+    font-weight:700;
+  }
+  
+  .under-text {
+    font-size: 40px;
+    font-weight:700;
+  }
+}
+ .btn-back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom:40px;
+
+}
+
+.btn-back:hover {
+    background-color: #0056b3;
+}
+
+/* עיצוב הטקסט בתוך הכפתור */
+.btn-back:before {
+    content: '\2190'; /* הוספת סמל חזרה (חץ שמאלה) */
+    margin-right: 8px; /* מרווח מימין */
+}
