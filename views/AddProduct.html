@@ -40,13 +40,12 @@
         <form id="assetForm" action="/addAsset" method="POST" style="margin-top: -190px;">
             <h2>Adding New Digital Asset</h2><br>
             <input type="text" name="Category" placeholder="Category" required><br><br>
-            <input type="text" name="Name Digital Asset" placeholder="Name Digital Asset" required><br><br>
+            <input type="text" name="NameDigitalAsset" placeholder="Name Digital Asset" required><br><br>
             <input type="text" name="Place" placeholder="Place" required><br><br>
             <input type="date" name="Date" placeholder="Date" required><br><br>
             <input type="time" name="Time" placeholder="Time" required><br><br>
             <input type="number" name="Quantity" placeholder="Quantity" required><br><br>
-            <input type="number" name="Price" placeholder="Price" required><br><br>
-            <input type="image" name="Upload Digital Asset" placeholder="Upload Digital Asset" required><br><br><br>
+            <input type="number" name="Price" placeholder="Price ($)" required><br><br>
             <input type="submit" value="Add Asset" id="add-button">
         </form>
         <div class="conformation" style="display: none;">
@@ -63,7 +62,7 @@
                 <div class="ProfilePic" id="ProfilePic">
                     <img src="images/adir.jpg" alt="ProfilePic">
                 </div>
-                <form id="assetForm" action="/addAsset" method="POST" style="margin-top: 120px;">
+                <form id="assetForm" action="http://localhost:3300/addAsset" method="POST" style="margin-top: 120px;">
                     <br><br><br><br><h2>Hi, Adir</h2>
                     <a class="choosed-button">Add New Digital Asset</a>
                     <a href="History.html" class="menu-button">Buy & Sell History</a>

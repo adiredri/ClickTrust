@@ -29,10 +29,10 @@ const assetSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  ImageOfAsset: {
-    type: String, // Assuming the image will be stored as a URL or file path
-    required: false,
-  }
+  Available: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const Asset = mongoose.model('Asset', assetSchema);

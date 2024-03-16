@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require('path');
 const User = require('../models/user');
 const Asset = require('../models/asset');
-//const Asset = require('../models/asset');
 //const Trade = require('../models/trades');
 
 //  ----------------- SIGNUP --------------------
@@ -18,7 +17,7 @@ router.post('/addUser', async (req, res) => {
     Password: req.body.Password,
     Phone: req.body.Phone,
     Birthday: req.body.Birthday,
-    // Gender: req.body.Gender 
+    Gender: req.body.Gender,
   });
   try {
     // Save the user to the database
@@ -83,7 +82,7 @@ router.post('/addAsset', async (req, res) => {
     Time: req.body.Time,
     Quantity: req.body.Quantity,
     Price: req.body.Price,
-    ImageOfAsset: req.body.ImageOfAsset
+    Available: req.body.Available,
   });
 
   try {
@@ -107,8 +106,20 @@ router.post('/addAsset', async (req, res) => {
   }
 });
 
+// Sends all the assets from DB to allassets page
+router.get('/allAssets', async (req, res) => {
+  try {
+    // Retrieve all assets from the database
+    const assets = await Asset.find({}, { _id: 0, __v: 0 }).sort({ Value: -1 });
+    res.json(assets);
+  } catch (error) {
+    console.error('Error retrieving assets:', error);
+    res.status(500).json({ error: 'Failed to retrieve assets' });
+  }
+});
+
 // Sends all the assets to the manage asset page
-router.get('/assets', async (req, res) => {
+router.get('/addAsset', async (req, res) => {
   try {
     // Retrieve all assets from the database
     const assets = await Asset.find();
@@ -145,7 +156,7 @@ try {
     const trades = await Trade.find({ AssetName: asset.AssetName });
     for (let i = 0; i < trades.length; i++) {
       const trade = trades[i];
-      trade.Value = trade.Amount * asset.Price;
+      trade.Value = asset.Price;
       await trade.save();
     }
     res.json(asset);
@@ -172,14 +183,12 @@ router.post('/addTrade', async (req, res) => {
     if (existingTrade && theUser) {
       // If a trade exists, update its properties
       existingTrade.Amount += Amount;
-      existingTrade.Value = (existingTrade.Amount * theAsset.Price);
+      existingTrade.Value = (theAsset.Price);
       existingTrade.LastDate = new Date();
-      theUser.Balance -= Value;
 
       // Save the updated trade and Balance of User
       const updatedTrade = await existingTrade.save();
       await theUser.save()
-
 
       res.status(200).json(updatedTrade);
     } else {
@@ -267,28 +276,6 @@ router.post('/getOwnedAmount', async (req, res) => {
   }
 });
 
-// Updates user balance
-router.patch('/user/balance', async (req, res) => {
-  const { username, balance } = req.body;
-  try {
-    // Retrieve the user from the database
-    const user = await User.findOne({ UserName: username });
-
-    if (user) {
-      // Update the user's balance
-      user.Balance = balance;
-      await user.save();
-
-      res.json({ message: 'User balance updated successfully' });
-    } else {
-      res.status(404).json({ error: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error updating user balance:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 //  ----------------- Sends ------------------
 
 // Sends to customer home page
@@ -307,7 +294,7 @@ router.get('/loginPage', function (req, res) {
 });
 
 // Sends to add asset page
-router.get('/Asset', function (req, res) {
+router.get('/addAsset', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'AddProduct.html'));
 });
 
@@ -322,8 +309,8 @@ router.get('/welcome', function (req, res) {
 });
 
 // Sends to trade page
-router.get('/trade', async (req, res) => {
-  res.sendFile(path.join(__dirname, '../../views', 'trade.html'));
+router.get('/allAssets', async (req, res) => {
+  res.sendFile(path.join(__dirname, '../../views', 'indexCustomer.html'));
 });
 
 // Sends to about page
@@ -341,9 +328,9 @@ router.get('/ManageAssets', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'ManageAssets.html'));
 });
 
-// Sends to editBalance page
-router.get('/editBalance', async (req, res) => {
-  res.sendFile(path.join(__dirname, '../../views', 'editbalance.html'));
+// Sends to trades page
+router.get('/trades', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../views', 'History.html'));
 });
 
 // Sends all the trades from DB to allTrades page
@@ -358,30 +345,12 @@ router.get('/alltrades', async (req, res) => {
   }
 });
 
-// Gets a user name and returns the balance
-router.get('/user/balance', async (req, res) => {
-  const username = req.query.username;
-  try {
-    // Retrieve the user's balance from the database or any other data source
-    const user = await User.findOne({ UserName: username });
-    if (user) {
-      const balance = user.Balance;
-      res.json(balance);
-    } else {
-      res.status(404).json({ error: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error fetching user balance:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 // Sends all the amaounts of assets that a user has to the trade page
-router.get('/user/asset-amounts', async (req, res) => {
-  const username = req.query.username;
+router.get('/user/asset', async (req, res) => {
+  const email = req.query.email;
   try {
     // Find all trades for the specified user
-    const trades = await Trade.find({ UserName: username });
+    const trades = await Trade.find({ Email: email });
 
     // Create an object to store the asset amounts
     const AssetAmounts = {};
@@ -401,32 +370,5 @@ router.get('/user/asset-amounts', async (req, res) => {
   }
 });
 
-// Sends to trades page
-router.get('/trades', function (req, res) {
-  res.sendFile(path.join(__dirname, '../../views', 'allTrades.html'));
-});
-
-// Sends all the trades of one user to the portfolio page
-router.get('/trades/:username', async (req, res) => {
-  try {
-    const { username } = req.params;
-    const trades = await Trade.find({ UserName: username }, '-_id AssetName Amount Value LastDate');
-    const tradesWithImages = [];
-
-    for (const trade of trades) {
-      const asset = await Asset.findOne({ AssetName: trade.AssetName });
-      const tradeWithImage = {
-        trade,
-        image: asset ? asset.ImageOfAsset : '' 
-      };
-      tradesWithImages.push(tradeWithImage);
-    }
-
-    res.json(tradesWithImages);
-  } catch (error) {
-    console.error('Error fetching trades:', error);
-    res.status(500).json({ error: 'Internal server error'});
-  }
-});
 
 module.exports = router;

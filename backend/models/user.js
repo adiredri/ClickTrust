@@ -31,10 +31,10 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  /*Gender: {
-    type: Boolean,
+  Gender: {
+    type: String,
     required: true
-  }*/
+  },
 });
 
 const User = mongoose.model('User', userSchema);

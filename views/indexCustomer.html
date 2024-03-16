@@ -33,84 +33,7 @@
     </div>
     </nav>
 
-    <script>
-      // Retrieve the customer's first name from the URL query parameter
-      const urlParams = new URLSearchParams(window.location.search);
-      const firstName = urlParams.get('firstName');
-
-      // Update the HTML content with the customer's first name
-      const customerNameElement = document.getElementById('customer-name');
-      customerNameElement.textContent = firstName;
-    </script>
-    
-    <!-- TradingView Widget BEGIN -->
-    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {
-    "symbols": [
-      {
-        "proName": "FX_IDC:EURUSD",
-        "title": "EUR/USD"
-      },
-      {
-        "proName": "BITSTAMP:BTCUSD",
-        "title": "Bitcoin"
-      },
-      {
-        "proName": "BITSTAMP:ETHUSD",
-        "title": "Ethereum"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:BNBUSD"
-      },
-      {
-        "description": "",
-        "proName": "BITSTAMP:XRPUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:DOGEUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:ADAUSD"
-      },
-      {
-        "description": "",
-        "proName": "COINBASE:SHIBUSD"
-      },
-      {
-        "description": "",
-        "proName": "BITRUE:AVAXUSDC"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:SOLUSD"
-      },
-      {
-        "description": "",
-        "proName": "SAXO:LTCUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:SANDUSD"
-      },
-      {
-        "description": "",
-        "proName": "OKX:MATICUSDC"
-      }
-    ],
-    "showSymbolLogo": true,
-    "colorTheme": "dark",
-    "isTransparent": true,
-    "displayMode": "compact",
-    "locale": "en"
-  }
-    </script>
   </div>
-  <!-- TradingView Widget END -->
     <div class="text-box">
     <p>
         <p class="title">Weclome To Click Trust</p>
@@ -121,26 +44,26 @@
         </p>
     </div>
     
-<!-- Search -->
+<!------------------------- Search ------------------------>
 
 <div class="text-box" style="height: 700px;">
   <h1 style="font-size: 40px;">Search Digital Asset</h1><br>
   <div class="search-container" style="margin-left: 50px;">
     <div>
       <label for="DateTrans">Search by Date:</label>
-      <input type="date" id="DateTrans" style="width: 180px;">
+      <input type="date" id="DateTrans" style="width: 180px;" oninput="filterAssets()">
     </div>
     <div>
       <label for="Name">Search by Name</label>
-      <input type="text" id="Name">
+      <input type="text" id="Name" oninput="filterAssets()">
     </div>
     <div>
       <label for="Category">Search by Category</label>
-      <input type="text" id="Category">
+      <input type="text" id="Category" oninput="filterAssets()">
     </div>
     <div class="price-slider" style="margin-right: 50px;">
       <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
-      <input type="range" id="price" name="price" min="0" max="5000" value="200">
+      <input type="range" id="price" name="price" min="0" max="5000" value="200" onclick="filterAssets()">
   </div>
   </div>
 
@@ -151,14 +74,15 @@
         <th>Category</th>
         <th>Name</th>
         <th>Place</th>
-        <th>Price</th>
         <th>Date</th>
         <th>Time</th>
-        <th>More Details</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Purchase</th>
       </tr>
     </thead>
-    <tbody id="tradeTableBody">
-      <!-- Trades will be dynamically added here -->
+    <tbody id="assetTableBody">
+      <!-- Assets will be dynamically added here -->
     </tbody>
   </table>
 </div>
@@ -172,7 +96,7 @@
             <div class="social-buttons-frame">
                 <p>Come and say hello:</p>
             <a href="https://www.facebook.com" target="_blank"><img src="images/facebook.png" alt=""></a>
-            <a href="https://twitter.com/KanoniCoin" target="_blank"><img src="images/twitter.png" alt=""></a>
+            <a href="https://twitter.com" target="_blank"><img src="images/twitter.png" alt=""></a>
             </div>
           </div>
     </div>
@@ -194,7 +118,7 @@
             </div>
         </div>
       </footer>
-      
+  
 <script>
 
 /*   background video  */
@@ -222,6 +146,16 @@ window.addEventListener('DOMContentLoaded', function() {
 
 </script>
 
+<script>
+  // Retrieve the customer's first name from the URL query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const firstname = urlParams.get('firstName');
+
+  // Update the HTML content with the customer's first name
+  const customerNameElement = document.getElementById('customer-name');
+  customerNameElement.textContent = firstname;
+</script>
+
 <script> /* slide bar */
   const priceSlider = document.getElementById("price");
   const priceValue = document.getElementById("price-value");
@@ -232,5 +166,106 @@ window.addEventListener('DOMContentLoaded', function() {
   </script>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
 <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+
+<!--------------------- DB ------------------------>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<script>
+  // Make a request to the server and fetch the assets data
+  fetch('/allAssets')
+    .then(response => response.json())
+    .then(data => {
+      // Sort the assets by User Name in alphabetical order
+      data.sort((a, b) => a.Email.localeCompare(b.Email));
+
+      const assetTableBody = document.getElementById('assetTableBody');
+      const searchByDate = document.getElementById('DateTrans');
+      const searchByName = document.getElementById('Name');
+      const searchByCategory = document.getElementById('Category');
+      const maxPrice = document.getElementById('price');
+
+      const formatNumber = (number) => {
+        const formattedNumber = Number(number).toFixed(2);
+        return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      };
+
+      const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      };
+
+      const filterAssets = () => {
+        const searchDate = searchByDate.value.toLowerCase();
+        const searchName = searchByName.value.toLowerCase();
+        const searchCategory = searchByCategory.value.toLowerCase();
+        const searchPrice = maxPrice.value;
+
+        const filteredAssets = data.filter(asset => {
+        const assetDate = asset.Date.toLowerCase();
+        const assetName = asset.NameDigitalAsset.toLowerCase();
+        const assetCategory = asset.Category.toLowerCase();
+        const assetPrice = asset.Price;
+
+          return assetDate.includes(searchDate) &&
+            assetName.includes(searchName) &&
+            (!searchPrice || assetPrice <= searchPrice) &&
+            assetCategory.includes(searchCategory);
+        });
+
+        renderAssets(filteredAssets);
+      };
+
+      const renderAssets = (assets) => {
+        assetTableBody.innerHTML = '';
+        assets.forEach(asset => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+          <td>${asset.assetId}</td>
+          <td>${asset.assetCategory}</td>
+          <td>${asset.assetName}</td>
+          <td>${asset.assetPlace}</td>
+          <td>${formatDate(asset.assetDate)}</td>
+          <td>${asset.assetTime}</td>
+          <td>${formatNumber(asset.assetQuantity)}</td>
+          <td>${formatNumber(asset.assetPrice)}</td>
+          <td>
+            <input class="buy-input" type="text">
+            <button class="buy-button" onclick="performAsset(this, '${asset._id}', 'buy')">Buy</button>
+          </td>
+        `;
+        assetTableBody.appendChild(row);
+        });
+      };
+
+      searchByDate.addEventListener('input', filterAssets);
+      searchByName.addEventListener('input', filterAssets);
+      searchByCategory.addEventListener('input', filterAssets);
+      maxPrice.addEventListener('input', filterAssets);
+
+      renderAssets(data);
+    })
+    .catch(error => console.error('Error:', error));
+</script>
+-->
+
 </body>
 </html>

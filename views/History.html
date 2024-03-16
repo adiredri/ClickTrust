@@ -104,5 +104,72 @@
         </script>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
 <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+
+<script>
+  // Make a request to the server and fetch the trades data
+  fetch('/alltrades')
+    .then(response => response.json())
+    .then(data => {
+      // Sort the trades by User Name in alphabetical order
+      data.sort((a, b) => a.UserName.localeCompare(b.UserName));
+
+      const tradeTableBody = document.getElementById('tradeTableBody');
+      const searchNameInput = document.getElementById('searchName');
+      const searchValueInput = document.getElementById('searchValue');
+      const searchUserInput = document.getElementById('searchUser');
+
+      const formatNumber = (number) => {
+        const formattedNumber = Number(number).toFixed(2);
+        return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      };
+
+      const formatDate = (dateString) => {
+        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      };
+
+      const filterTrades = () => {
+        const searchName = searchNameInput.value.toLowerCase();
+        const searchValue = searchValueInput.value;
+        const searchUser = searchUserInput.value.toLowerCase();
+
+        const filteredTrades = data.filter(trade => {
+          const tradeName = trade.CoinName.toLowerCase();
+          const tradeValue = trade.Value;
+          const tradeUser = trade.UserName.toLowerCase();
+
+          return tradeName.includes(searchName) &&
+            (!searchValue || tradeValue <= searchValue) &&
+            tradeUser.includes(searchUser);
+        });
+
+        renderTrades(filteredTrades);
+      };
+
+      const renderTrades = (trades) => {
+        tradeTableBody.innerHTML = '';
+        trades.forEach(trade => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${trade.UserName}</td>
+            <td>${trade.CoinName}</td>
+            <td>${trade.Amount}</td>
+            <td>${formatNumber(trade.Value)}</td>
+            <td>${formatDate(trade.LastDate)}</td>
+          `;
+          tradeTableBody.appendChild(row);
+        });
+      };
+
+      searchNameInput.addEventListener('input', filterTrades);
+      searchValueInput.addEventListener('input', filterTrades);
+      searchUserInput.addEventListener('input', filterTrades);
+
+      renderTrades(data);
+    })
+    .catch(error => console.error('Error:', error));
+</script>
+
+
 </body>
 </html>

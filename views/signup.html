@@ -32,11 +32,11 @@
             <input type="tel" name="Phone" placeholder="Phone" required><br><br>
             <input type="date" name="Birthday" placeholder="Birthday" required><br><br><br>
             <div class="gender-options" name="Gender">
-                <input type="radio" id="male" name="gender" value="male"><label for="male">Male</label>
-                <input type="radio" id="female" name="gender" value="female"> <label for="female">Female</label>
-                <input type="radio" id="other" name="gender" value="other"><label for="other">Other</label>
+                <input type="radio" id="male" name="Gender" value="male"><label for="male">Male</label>
+                <input type="radio" id="female" name="Gender" value="female"> <label for="female">Female</label>
+                <input type="radio" id="other" name="Gender" value="other"><label for="other">Other</label>
             </div><br>
-            <input type="submit" value="Sign Up" id="signup-button">
+            <input type="submit" value="Sign Up" id="signup-button" onclick="displayRadioValue()">
         </form><br>
         <p>Already have an account?<a href="LogIn.html" style="display: flex;">log in here</a></p>
      <p style="font-size: 12px;">By continuing with an account you agree to our <a href="TermsOfUse.html">Terms of Use</a> and acknowledge that you have read our <a href="PrivacyPolicy.html">Privacy Policy</a></p>
@@ -62,4 +62,17 @@
         });
     });
 </script>
+
+<script>
+    Available = true;
+    function displayRadioValue() {
+        var ele = document.getElementsByName('Gender');
+        for (i = 0; i < ele.length; i++) {
+            if (ele[i].checked)
+                document.getElementById("result").innerHTML=ele[i].value;
+        }
+    }
+</script>
+
+
 </html>
