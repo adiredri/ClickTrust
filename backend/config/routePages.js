@@ -85,22 +85,13 @@ router.post('/addAsset', async (req, res) => {
     Email: req.body.Email,
   });
 
-  try {
-    const { CoinName, Amount, Value, UserName } = req.body;
-    // Check if there is an asset with the same name already exists לבדוק
-    const existingAsset = await Asset.findOne({ NameDigitalAsset: req.body.NameDigitalAsset });
-    if (existingAsset) {
-      // Display an alert for an existing asset
-      const errorMessage = 'An Asset with the same name already exists.';
-      console.error(errorMessage);
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
-    } else {
+  try {   
       // Save the Asset to the database
       await asset.save();
       console.log('Asset added successfully'); 
       // Send a response back to the client-side to handle the confirmation
       res.send({ assetAdded: true });
-    }/*
+    
     if (loguser) {
 
       // Retrieve user's role based on email and ID
@@ -114,13 +105,13 @@ router.post('/addAsset', async (req, res) => {
       // Display an alert for no such user
       const errorMessage = 'No user found with the provided email and password.';
       console.error(errorMessage);
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/LogIn'</script>`);
+      res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
     }
-    */
+    
   } catch (error) {
-    console.error('Error adding asset:', error);
-    res.status(500).send('Error adding asset.');
-  }
+    const errorMessage = 'An error occurred while adding the asset.';
+    console.error(errorMessage);
+    res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
 });
 
 // Sends all the assets from DB to allassets page
@@ -190,7 +181,7 @@ try {
 router.post('/addTrade', async (req, res) => {
   try {
     // Extract the trade data from the request body
-    const { AssetName, Amount, Value, Email } = req.body;
+    const { AssetID, Category, Value, Email } = req.body;
 
     // Check if a trade with the same asset and username exists
     const existingTrade = await Trade.findOne({ AssetName, Email });
@@ -311,7 +302,7 @@ router.get('/loginPage', function (req, res) {
 });
 
 // Sends to add asset page
-router.get('/addAsset', function (req, res) {
+router.get('/Asset', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'AddProduct.html'));
 });
 

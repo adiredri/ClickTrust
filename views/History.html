@@ -28,9 +28,9 @@
         <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
     </div>
     <div id="widget">
-        <a href="index.html">
-        <img src="images/homepage.png" alt="Image" id="widget-image"></a>
-    </div>
+      <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+          <img src="images/homepage.png" alt="Image" id="widget-image"></a>
+  </div>
 
         <!-- end video, navbar, logo, widget -->
 
@@ -102,16 +102,40 @@
             priceValue.textContent = this.value / 2; // הצגת חצי הערך שנבחר
         });
         </script>
+
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
 <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
 
+<script> // home page customer / admin
+
+  // Retrieve the email from session storage
+   const Email = sessionStorage.getItem('Email');
+   var userId = document.getElementById(Email); // קבלת ה-ID לפי האימייל
+
+   // Determine the home page URL based on the user's role
+   let homePageUrl;
+   if (userId === '65f0dcf998ec2d9cd878bd39' || userId === '65f0e0ee98ec2d9cd878bd3b') 
+   {
+   homePageUrl = ('/admin?Email=' + Email);
+   } 
+   else 
+   {
+       homePageUrl = ('/customer?Email=' + Email);
+   }
+
+   // Set the href attribute of the home link
+   const homeLink = document.getElementById('home-link');
+   homeLink.setAttribute('href', homePageUrl);
+</script>
+
 <script>
+
   // Make a request to the server and fetch the trades data
   fetch('/alltrades')
     .then(response => response.json())
     .then(data => {
-      // Sort the trades by User Name in alphabetical order
-      data.sort((a, b) => a.UserName.localeCompare(b.UserName));
+      // Sort the trades by Email in alphabetical order
+      data.sort((a, b) => a.Email.localeCompare(b.Email));
 
       const tradeTableBody = document.getElementById('tradeTableBody');
       const searchNameInput = document.getElementById('searchName');

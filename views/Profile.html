@@ -28,8 +28,8 @@
         <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
     </div>
     <div id="widget">
-        <a href="index.html">
-        <img src="images/homepage.png" alt="Image" id="widget-image"></a>
+        <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+            <img src="images/homepage.png" alt="Image" id="widget-image"></a>
     </div>
 
         <!-- end video, navbar, logo, widget -->
@@ -54,5 +54,28 @@
       
       <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
       <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
-</body>
+
+      <script> // home page customer / admin
+
+        // Retrieve the email from session storage
+         const Email = sessionStorage.getItem('Email');
+         var userId = document.getElementById(Email); // קבלת ה-ID לפי האימייל
+      
+         // Determine the home page URL based on the user's role
+         let homePageUrl;
+         if (userId === '65f0dcf998ec2d9cd878bd39' || userId === '65f0e0ee98ec2d9cd878bd3b') 
+         {
+         homePageUrl = ('/admin?Email=' + Email);
+         } 
+         else 
+         {
+             homePageUrl = ('/customer?Email=' + Email);
+         }
+      
+         // Set the href attribute of the home link
+         const homeLink = document.getElementById('home-link');
+         homeLink.setAttribute('href', homePageUrl);
+      </script>
+
+    </body>
 </html>

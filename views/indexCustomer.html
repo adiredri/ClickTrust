@@ -20,11 +20,11 @@
         <div class="nav-bar">
         <a href="Contact.html">Contact Us</a>
         <a href="About.html">About Us</a>
-        <a href="AddProduct.html">Add Asset</a>
+        <a href="/Asset">Add Asset</a>
         <a href="History.html">Cart</a>
         <div class="profile-info">
             <div class="profile-name">
-                <a href="Profile.html" style="text-decoration: none;" id="welcome-message">Welcome, <span id="customer-name"></span></a>
+                <a href="Profile.html" style="text-decoration: none;" id="welcome-message">Welcome, <span id="fname"></span></a>
             </div>
         </div>   
         <div class="profile-pic">
@@ -77,7 +77,7 @@
         <th>Date</th>
         <th>Time</th>
         <th>Quantity</th>
-        <th>Price</th>
+        <th>Price($)</th>
         <th>Purchase</th>
       </tr>
     </thead>
@@ -148,13 +148,20 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-  // Retrieve the customer's Email from the URL query parameter
+  // Retrieve the customer's first name from the URL query parameter
   const urlParams = new URLSearchParams(window.location.search);
   const Email = urlParams.get('Email');
 
-  // Update the HTML content with the customer's Email
-  const customerNameElement = document.getElementById('');
+  // Update the HTML content with the customer's first name
+  const customerNameElement = document.getElementById('customer-name');
   customerNameElement.textContent = Email;
+  
+  sessionStorage.setItem('Email', Email);
+
+// Split the email address to get the name part
+const emailParts = Email.split('@');
+const fname = emailParts[0]; // Assuming the name is before the "@" symbol
+
 </script>
 
 <script> /* slide bar */
@@ -243,6 +250,12 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+  // Event listeners
+  document.getElementById('DateTrans').addEventListener('input', filterAssets);
+  document.getElementById('Name').addEventListener('input', filterAssets);
+  document.getElementById('Category').addEventListener('input', filterAssets);
+  document.getElementById('price').addEventListener('input', filterAssets);
+
   function formatDate(dateString) {
     const date = new Date(dateString);
     // Format the date as desired (e.g., YYYY-MM-DD)
@@ -254,15 +267,42 @@ document.addEventListener("DOMContentLoaded", function () {
     // Implement time formatting if needed
     return timeString;
   }
-  // Event listeners
-  document.getElementById('DateTrans').addEventListener('input', filterAssets);
-  document.getElementById('Name').addEventListener('input', filterAssets);
-  document.getElementById('Category').addEventListener('input', filterAssets);
-  document.getElementById('price').addEventListener('input', filterAssets);
+
+  async function buyAsset(coinId, price, amount) {
+      const totalPrice = price * amount;
+      const username = firstName;
+
+      if (confirm('Are you sure you want to buy?')) {
+        const response = await fetch('/addTrade', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            CoinName: coinNames[coinId],
+            Amount: amount,
+            Value: totalPrice,
+            UserName: username,
+          }),
+        });
+
+        if (response.ok) {
+          alert('Trade confirmed.');
+          location.reload(); // Refresh the page
+        } else {
+          alert('Failed to perform the purchase.');
+        }
+      } else {
+        // User canceled the trade
+        alert('Trade canceled.');
+      }
+    }
+
 
   // Fetch assets when the page loads
   fetchAssets();
 });
+
 </script>
 
 </body>
