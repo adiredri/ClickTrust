@@ -29,10 +29,7 @@ const assetSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  Available: {
-    type: Boolean,
-    required: true,
-  },
+
 });
 
 const Asset = mongoose.model('Asset', assetSchema);

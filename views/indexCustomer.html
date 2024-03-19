@@ -169,19 +169,95 @@ window.addEventListener('DOMContentLoaded', function() {
 
 <!--------------------- DB ------------------------>
 
+<script>
+
+const firstName = sessionStorage.getItem('firstName');
+
+// Object to store coin names by ID
+const assetNames = {};
+
+// Function to fetch coins from the backend and populate the table
+async function fetchAssets() {
+  try {
+    const response = await fetch('/assets');
+    const assets = await response.json();
+
+    // Sort the coins by largest price to lowest
+    assets.sort((a, b) => b.Price - a.Price);
+
+    const assetTableBody = document.getElementById('assetTableBody');
+
+    // Iterate over the coins and create table rows dynamically
+    assets.forEach((asset) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+          <td>${asset.assetId}</td>
+          <td>${asset.assetCategory}</td>
+          <td>${asset.assetName}</td>
+          <td>${asset.assetPlace}</td>
+          <td>${asset.assetDate}</td>
+          <td>${asset.assetTime}</td>
+          <td>${asset.assetQuantity}</td>
+          <td>${asset.assetPrice}</td>
+          <td>
+            <button class="buy-button">Buy</button>
+          </td>
+        `;
+
+        assetTableBody.appendChild(row);
+
+      // Store coin names by ID for reference in purchased coins table
+    //  assetNames[coin._id] = coin.CoinName;
+    });
+
+  //  updateCoinAmounts(firstName);  // עדכון לקניה של נכסים חדשים
+  console.log('Assets:', assets); // לבדוק את הנתונים שמגיעים מהשרת
+  } catch (error) {
+    console.error('Error fetching assets:', error);
+  }
+}
+
+// Function to filter assets based on search criteria
+function filterAssets() {
+      const searchByDate = document.getElementById('DateTrans');
+      const searchByName = document.getElementById('Name');
+      const searchByCategory = document.getElementById('Category');
+      const maxPrice = document.getElementById('price');
+ 
+      const assets = Array.from(document.getElementById('assetTableBody').getElementsByTagName('tr'));
+
+  assets.forEach((asset) => {
+    const DateTrans = asset.children[1].innerText;
+    const AssetName = asset.children[2].innerText;
+    const Category = asset.children[3].innerText;
+    const price = parseFloat(coin.children[4].innerText);
+
+    asset.style.display = '';
+
+    if (searchByDate.value && !DateTrans.toLowerCase().includes(searchByDate.value.toLowerCase())) {
+      asset.style.display = 'none';
+    }
+
+    if (searchByName.value && !AssetName.toLowerCase().includes(searchByName.value.toLowerCase())) {
+      asset.style.display = 'none';
+    }   
+
+    if (searchByCategory.value && !Category.toLowerCase().includes(searchByCategory.value.toLowerCase())) {
+      asset.style.display = 'none';
+    }
+
+    if (maxPrice.value && price > parseFloat(maxPrice.value)) {
+      asset.style.display = 'none';
+    }
+
+  });
+}
+
+// Fetch assets when the page loads
+fetchAssets();
 
 
-
-
-
-
-
-
-
-
-
-
-
+</script>
 
 
 
@@ -189,6 +265,148 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 <!--
+  
+<script>
+
+  // Function to perform the trade based on the selected action (buy/sell)
+async function performTrade(button, coinId, action) {
+  const input = action === 'buy' ? button.parentNode.querySelector('.buy-input') : button.parentNode.querySelector('.sell-input');
+  const amount = parseFloat(input.value);
+
+  if (!isNaN(amount) && amount > 0) {
+    const price = parseFloat(document.getElementById(`${coinId}Price`).innerText);
+
+    if (action === 'buy') {
+      const balanceElement = document.getElementById('balance');
+      const balance = parseFloat(balanceElement.innerText);
+      const totalPrice = price * amount;
+
+      if (totalPrice <= balance) {
+        buyCoin(coinId, price, amount);
+      } else {
+        alert('Insufficient balance to perform the purchase.');
+      }
+    } else if (action === 'sell') {
+      try {
+        const response = await fetch('/getOwnedAmount', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            CoinName: assetNames[coinId],
+            UserName: firstName
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const ownedAmount = data.amount;
+
+          if (amount <= ownedAmount) {
+            sellCoin(coinId, price, amount);
+          } else {
+            alert('You do not own enough coins to sell.');
+          }
+        } else {
+          throw new Error('Failed to retrieve owned amount.');
+        }
+      } catch (error) {
+        console.error('Error retrieving owned amount:', error);
+        alert('An error occurred while retrieving your owned amount. Please try again later.');
+      }
+    }
+
+    // Clear the amount input field
+    input.value = '';
+  }
+}
+
+async function buyCoin(coinId, price, amount) {
+  const totalPrice = price * amount;
+  const username = firstName;
+
+  if (confirm('Are you sure you want to buy?')) {
+    const response = await fetch('/addTrade', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        CoinName: assetNames[coinId],
+        Amount: amount,
+        Value: totalPrice,
+        UserName: username,
+      }),
+    });
+
+    if (response.ok) {
+      alert('Trade confirmed.');
+      location.reload(); // Refresh the page
+    } else {
+      alert('Failed to perform the purchase.');
+    }
+  } else {
+    // User canceled the trade
+    alert('Trade canceled.');
+  }
+}
+
+async function sellCoin(coinId, price, amount) {
+  const totalPrice = price * amount;
+  const username = firstName;
+
+  if (confirm('Are you sure you want to sell?')) {
+    const response = await fetch('/reduceTrade', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        CoinName: assetNames[coinId],
+        Amount: amount,
+        Value: totalPrice,
+        UserName: username,
+      }),
+    });
+
+    if (response.ok) {
+      alert('Trade confirmed.');
+      location.reload(); // Refresh the page
+    } else {
+      alert('Failed to perform the sale.');
+    }
+  } else {
+    // User canceled the trade
+    alert('Trade canceled.');
+  }
+}
+
+// עדכון לקניה של נכסים חדשים
+// Function to fetch amaounts of every coin the user has 
+async function updateCoinAmounts(username) {
+  try {
+    const response = await fetch(`/user/coin-amounts?username=${username}`);
+    const coinAmounts = await response.json();
+
+    // Iterate over the coin amounts object
+    for (const coinName in coinAmounts) {
+      const coinAmount = coinAmounts[coinName];
+      const coinId = Object.keys(assetNames).find(key => assetNames[key] === coinName);
+      const amountCell = document.getElementById(`${coinId}Amount`);
+
+      if (amountCell) {
+        amountCell.textContent = coinAmount.toFixed(2);
+      }
+    }
+  } catch (error) {
+    console.error('Error updating coin amounts:', error);
+  }
+}
+</script>
+
+
+
 <script>
   // Make a request to the server and fetch the assets data
   fetch('/allAssets')
@@ -265,7 +483,10 @@ window.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => console.error('Error:', error));
 </script>
+
+
 -->
+
 
 </body>
 </html>

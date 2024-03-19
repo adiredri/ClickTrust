@@ -82,7 +82,6 @@ router.post('/addAsset', async (req, res) => {
     Time: req.body.Time,
     Quantity: req.body.Quantity,
     Price: req.body.Price,
-    Available: req.body.Available,
   });
 
   try {
@@ -119,10 +118,10 @@ router.get('/allAssets', async (req, res) => {
 });
 
 // Sends all the assets to the manage asset page
-router.get('/addAsset', async (req, res) => {
+router.get('/assets', async (req, res) => {
   try {
     // Retrieve all assets from the database
-    const assets = await Asset.find();
+    const assets = await Asset.find({});
 
     // Send the assets as a JSON response
     res.json(assets);
