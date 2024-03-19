@@ -29,8 +29,14 @@ const assetSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-
+  Email: {
+    type: String,
+    required: true,
+    unique: true
+  },
 });
+assetSchema.index({ NameDigitalAsset: 1, Email: 1 }, { unique: true });
+
 
 const Asset = mongoose.model('Asset', assetSchema);
 module.exports = Asset;

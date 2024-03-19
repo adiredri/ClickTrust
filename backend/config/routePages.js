@@ -53,10 +53,10 @@ router.post('/login', async (req, res) => {
 
       // Retrieve user's role based on email and ID
       if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
-        res.redirect('/admin?firstName=' + loguser.FirstName);
+        res.redirect('/admin?Email=' + loguser.Email);
       } else {
         // Redirect to the customer index page and pass the first name as a query parameter in the URL
-        res.redirect('/customer?firstName=' + loguser.FirstName);
+        res.redirect('/customer?Email=' + loguser.Email);
       }
     } else {
       // Display an alert for no such user
@@ -82,9 +82,11 @@ router.post('/addAsset', async (req, res) => {
     Time: req.body.Time,
     Quantity: req.body.Quantity,
     Price: req.body.Price,
+    Email: req.body.Email,
   });
 
   try {
+    const { CoinName, Amount, Value, UserName } = req.body;
     // Check if there is an asset with the same name already exists לבדוק
     const existingAsset = await Asset.findOne({ NameDigitalAsset: req.body.NameDigitalAsset });
     if (existingAsset) {
@@ -98,7 +100,23 @@ router.post('/addAsset', async (req, res) => {
       console.log('Asset added successfully'); 
       // Send a response back to the client-side to handle the confirmation
       res.send({ assetAdded: true });
+    }/*
+    if (loguser) {
+
+      // Retrieve user's role based on email and ID
+      if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
+        res.redirect('/admin?Email=' + loguser.Email);
+      } else {
+        // Redirect to the customer index page and pass the first name as a query parameter in the URL
+        res.redirect('/customer?Email=' + loguser.Email);
+      }
+    } else {
+      // Display an alert for no such user
+      const errorMessage = 'No user found with the provided email and password.';
+      console.error(errorMessage);
+      res.send(`<script>alert('${errorMessage}'); window.location.href='/LogIn'</script>`);
     }
+    */
   } catch (error) {
     console.error('Error adding asset:', error);
     res.status(500).send('Error adding asset.');

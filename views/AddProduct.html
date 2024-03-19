@@ -76,7 +76,9 @@
 </body>
 
 <script>
-
+    // Retrieve the email from session storage
+    const Email = sessionStorage.getItem('Email');
+  
     // Clear all input fields
     function clearFields() {
       $('#Category').val('');
@@ -88,26 +90,29 @@
       $('#Price').val('');
       $('#ImageOfAsset').val('');
     }
-
+  
     // Event listener for the form submission
     $('#assetForm').submit(function (e) {
       e.preventDefault();
-
+  
       // Get the form data
       var formData = $(this).serialize();
-
-  // Send a POST request to the server
-  $.post('/addAsset', formData, function(response) {
-    if (response.coinAdded) {
-      // Show the confirmation message
-      // $('.container').hide();
-      $('.conformation').show();
-      clearFields();
-    }
-  }).fail(function(error) {
-    console.error('Error adding asset:', error);
-  });
-});
+  
+      // Append the email to the form data
+      formData += `&Email=${Email}`;
+  
+      // Send a POST request to the server
+      $.post('/addAsset', formData, function(response) {
+        if (response.assetAdded) {
+          // Show the confirmation message
+          $('.conformation').show();
+          clearFields();
+        }
+      }).fail(function(error) {
+        console.error('Error adding asset:', error);
+      });
+    });
   </script>
+  
 
 </html>

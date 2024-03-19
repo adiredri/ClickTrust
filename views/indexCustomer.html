@@ -88,10 +88,11 @@
 </div>
 
 
+
 <!--------------------- Footer ------------------------>
 
-    <footer>
-        <div class="social">
+<footer>
+  <div class="social"  style="bottom: 0;">
         <div class="social-media">
             <div class="social-buttons-frame">
                 <p>Come and say hello:</p>
@@ -147,13 +148,13 @@ window.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-  // Retrieve the customer's first name from the URL query parameter
+  // Retrieve the customer's Email from the URL query parameter
   const urlParams = new URLSearchParams(window.location.search);
-  const firstname = urlParams.get('firstName');
+  const Email = urlParams.get('Email');
 
-  // Update the HTML content with the customer's first name
-  const customerNameElement = document.getElementById('customer-name');
-  customerNameElement.textContent = firstname;
+  // Update the HTML content with the customer's Email
+  const customerNameElement = document.getElementById('');
+  customerNameElement.textContent = Email;
 </script>
 
 <script> /* slide bar */
@@ -170,323 +171,99 @@ window.addEventListener('DOMContentLoaded', function() {
 <!--------------------- DB ------------------------>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const Email = sessionStorage.getItem('Email');
 
-const firstName = sessionStorage.getItem('firstName');
+  async function fetchAssets() {
+    try {
+      const response = await fetch('/assets');
+      if (!response.ok) {
+        throw new Error('Failed to fetch assets');
+      }
+      const assets = await response.json();
+      renderAssets(assets);
+      console.log('Assets:', assets);
+    } catch (error) {
+      console.error('Error fetching assets:', error);
+    }
+  }
 
-// Object to store coin names by ID
-const assetNames = {};
-
-// Function to fetch coins from the backend and populate the table
-async function fetchAssets() {
-  try {
-    const response = await fetch('/assets');
-    const assets = await response.json();
-
-    // Sort the coins by largest price to lowest
-    assets.sort((a, b) => b.Price - a.Price);
-
+  function renderAssets(assets) {
     const assetTableBody = document.getElementById('assetTableBody');
-
-    // Iterate over the coins and create table rows dynamically
+    assetTableBody.innerHTML = ''; // Clear existing rows
     assets.forEach((asset) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-          <td>${asset.assetId}</td>
-          <td>${asset.assetCategory}</td>
-          <td>${asset.assetName}</td>
-          <td>${asset.assetPlace}</td>
-          <td>${asset.assetDate}</td>
-          <td>${asset.assetTime}</td>
-          <td>${asset.assetQuantity}</td>
-          <td>${asset.assetPrice}</td>
-          <td>
-            <button class="buy-button">Buy</button>
-          </td>
-        `;
-
-        assetTableBody.appendChild(row);
-
-      // Store coin names by ID for reference in purchased coins table
-    //  assetNames[coin._id] = coin.CoinName;
+        <td>${asset._id}</td>
+        <td>${asset.Category}</td>
+        <td>${asset.NameDigitalAsset}</td>
+        <td>${asset.Place}</td>
+        <td>${formatDate(asset.Date)}</td>
+        <td>${formatTime(asset.Time)}</td>
+        <td>${asset.Quantity}</td>
+        <td>${asset.Price}</td>
+        <td>
+          <button class="buy-button">Buy</button>
+        </td>
+      `;
+      assetTableBody.appendChild(row);
     });
-
-  //  updateCoinAmounts(firstName);  // עדכון לקניה של נכסים חדשים
-  console.log('Assets:', assets); // לבדוק את הנתונים שמגיעים מהשרת
-  } catch (error) {
-    console.error('Error fetching assets:', error);
   }
-}
 
-// Function to filter assets based on search criteria
-function filterAssets() {
-      const searchByDate = document.getElementById('DateTrans');
-      const searchByName = document.getElementById('Name');
-      const searchByCategory = document.getElementById('Category');
-      const maxPrice = document.getElementById('price');
- 
-      const assets = Array.from(document.getElementById('assetTableBody').getElementsByTagName('tr'));
+  function filterAssets() {
+    const searchByDate = document.getElementById('DateTrans');
+    const searchByName = document.getElementById('Name');
+    const searchByCategory = document.getElementById('Category');
+    const maxPrice = document.getElementById('price');
 
-  assets.forEach((asset) => {
-    const DateTrans = asset.children[1].innerText;
-    const AssetName = asset.children[2].innerText;
-    const Category = asset.children[3].innerText;
-    const price = parseFloat(coin.children[4].innerText);
+    const assets = Array.from(document.getElementById('assetTableBody').getElementsByTagName('tr'));
 
-    asset.style.display = '';
+    assets.forEach((asset) => {
+      const DateTrans = asset.children[4].innerText;
+      const AssetName = asset.children[2].innerText;
+      const Category = asset.children[1].innerText;
+      const price = parseFloat(asset.children[7].innerText);
 
-    if (searchByDate.value && !DateTrans.toLowerCase().includes(searchByDate.value.toLowerCase())) {
-      asset.style.display = 'none';
-    }
+      asset.style.display = '';
 
-    if (searchByName.value && !AssetName.toLowerCase().includes(searchByName.value.toLowerCase())) {
-      asset.style.display = 'none';
-    }   
-
-    if (searchByCategory.value && !Category.toLowerCase().includes(searchByCategory.value.toLowerCase())) {
-      asset.style.display = 'none';
-    }
-
-    if (maxPrice.value && price > parseFloat(maxPrice.value)) {
-      asset.style.display = 'none';
-    }
-
-  });
-}
-
-// Fetch assets when the page loads
-fetchAssets();
-
-
-</script>
-
-
-
-
-
-
-<!--
-  
-<script>
-
-  // Function to perform the trade based on the selected action (buy/sell)
-async function performTrade(button, coinId, action) {
-  const input = action === 'buy' ? button.parentNode.querySelector('.buy-input') : button.parentNode.querySelector('.sell-input');
-  const amount = parseFloat(input.value);
-
-  if (!isNaN(amount) && amount > 0) {
-    const price = parseFloat(document.getElementById(`${coinId}Price`).innerText);
-
-    if (action === 'buy') {
-      const balanceElement = document.getElementById('balance');
-      const balance = parseFloat(balanceElement.innerText);
-      const totalPrice = price * amount;
-
-      if (totalPrice <= balance) {
-        buyCoin(coinId, price, amount);
-      } else {
-        alert('Insufficient balance to perform the purchase.');
+      if (searchByDate.value && !DateTrans.toLowerCase().includes(searchByDate.value.toLowerCase())) {
+        asset.style.display = 'none';
       }
-    } else if (action === 'sell') {
-      try {
-        const response = await fetch('/getOwnedAmount', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            CoinName: assetNames[coinId],
-            UserName: firstName
-          }),
-        });
 
-        if (response.ok) {
-          const data = await response.json();
-          const ownedAmount = data.amount;
-
-          if (amount <= ownedAmount) {
-            sellCoin(coinId, price, amount);
-          } else {
-            alert('You do not own enough coins to sell.');
-          }
-        } else {
-          throw new Error('Failed to retrieve owned amount.');
-        }
-      } catch (error) {
-        console.error('Error retrieving owned amount:', error);
-        alert('An error occurred while retrieving your owned amount. Please try again later.');
+      if (searchByName.value && !AssetName.toLowerCase().includes(searchByName.value.toLowerCase())) {
+        asset.style.display = 'none';
       }
-    }
 
-    // Clear the amount input field
-    input.value = '';
-  }
-}
+      if (searchByCategory.value && !Category.toLowerCase().includes(searchByCategory.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
 
-async function buyCoin(coinId, price, amount) {
-  const totalPrice = price * amount;
-  const username = firstName;
-
-  if (confirm('Are you sure you want to buy?')) {
-    const response = await fetch('/addTrade', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        CoinName: assetNames[coinId],
-        Amount: amount,
-        Value: totalPrice,
-        UserName: username,
-      }),
+      if (maxPrice.value && price > parseFloat(maxPrice.value)) {
+        asset.style.display = 'none';
+      }
     });
-
-    if (response.ok) {
-      alert('Trade confirmed.');
-      location.reload(); // Refresh the page
-    } else {
-      alert('Failed to perform the purchase.');
-    }
-  } else {
-    // User canceled the trade
-    alert('Trade canceled.');
   }
-}
-
-async function sellCoin(coinId, price, amount) {
-  const totalPrice = price * amount;
-  const username = firstName;
-
-  if (confirm('Are you sure you want to sell?')) {
-    const response = await fetch('/reduceTrade', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        CoinName: assetNames[coinId],
-        Amount: amount,
-        Value: totalPrice,
-        UserName: username,
-      }),
-    });
-
-    if (response.ok) {
-      alert('Trade confirmed.');
-      location.reload(); // Refresh the page
-    } else {
-      alert('Failed to perform the sale.');
-    }
-  } else {
-    // User canceled the trade
-    alert('Trade canceled.');
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    // Format the date as desired (e.g., YYYY-MM-DD)
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    return formattedDate;
   }
-}
 
-// עדכון לקניה של נכסים חדשים
-// Function to fetch amaounts of every coin the user has 
-async function updateCoinAmounts(username) {
-  try {
-    const response = await fetch(`/user/coin-amounts?username=${username}`);
-    const coinAmounts = await response.json();
-
-    // Iterate over the coin amounts object
-    for (const coinName in coinAmounts) {
-      const coinAmount = coinAmounts[coinName];
-      const coinId = Object.keys(assetNames).find(key => assetNames[key] === coinName);
-      const amountCell = document.getElementById(`${coinId}Amount`);
-
-      if (amountCell) {
-        amountCell.textContent = coinAmount.toFixed(2);
-      }
-    }
-  } catch (error) {
-    console.error('Error updating coin amounts:', error);
+  function formatTime(timeString) {
+    // Implement time formatting if needed
+    return timeString;
   }
-}
+  // Event listeners
+  document.getElementById('DateTrans').addEventListener('input', filterAssets);
+  document.getElementById('Name').addEventListener('input', filterAssets);
+  document.getElementById('Category').addEventListener('input', filterAssets);
+  document.getElementById('price').addEventListener('input', filterAssets);
+
+  // Fetch assets when the page loads
+  fetchAssets();
+});
 </script>
-
-
-
-<script>
-  // Make a request to the server and fetch the assets data
-  fetch('/allAssets')
-    .then(response => response.json())
-    .then(data => {
-      // Sort the assets by User Name in alphabetical order
-      data.sort((a, b) => a.Email.localeCompare(b.Email));
-
-      const assetTableBody = document.getElementById('assetTableBody');
-      const searchByDate = document.getElementById('DateTrans');
-      const searchByName = document.getElementById('Name');
-      const searchByCategory = document.getElementById('Category');
-      const maxPrice = document.getElementById('price');
-
-      const formatNumber = (number) => {
-        const formattedNumber = Number(number).toFixed(2);
-        return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      };
-
-      const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-      };
-
-      const filterAssets = () => {
-        const searchDate = searchByDate.value.toLowerCase();
-        const searchName = searchByName.value.toLowerCase();
-        const searchCategory = searchByCategory.value.toLowerCase();
-        const searchPrice = maxPrice.value;
-
-        const filteredAssets = data.filter(asset => {
-        const assetDate = asset.Date.toLowerCase();
-        const assetName = asset.NameDigitalAsset.toLowerCase();
-        const assetCategory = asset.Category.toLowerCase();
-        const assetPrice = asset.Price;
-
-          return assetDate.includes(searchDate) &&
-            assetName.includes(searchName) &&
-            (!searchPrice || assetPrice <= searchPrice) &&
-            assetCategory.includes(searchCategory);
-        });
-
-        renderAssets(filteredAssets);
-      };
-
-      const renderAssets = (assets) => {
-        assetTableBody.innerHTML = '';
-        assets.forEach(asset => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-          <td>${asset.assetId}</td>
-          <td>${asset.assetCategory}</td>
-          <td>${asset.assetName}</td>
-          <td>${asset.assetPlace}</td>
-          <td>${formatDate(asset.assetDate)}</td>
-          <td>${asset.assetTime}</td>
-          <td>${formatNumber(asset.assetQuantity)}</td>
-          <td>${formatNumber(asset.assetPrice)}</td>
-          <td>
-            <input class="buy-input" type="text">
-            <button class="buy-button" onclick="performAsset(this, '${asset._id}', 'buy')">Buy</button>
-          </td>
-        `;
-        assetTableBody.appendChild(row);
-        });
-      };
-
-      searchByDate.addEventListener('input', filterAssets);
-      searchByName.addEventListener('input', filterAssets);
-      searchByCategory.addEventListener('input', filterAssets);
-      maxPrice.addEventListener('input', filterAssets);
-
-      renderAssets(data);
-    })
-    .catch(error => console.error('Error:', error));
-</script>
-
-
--->
-
 
 </body>
 </html>
