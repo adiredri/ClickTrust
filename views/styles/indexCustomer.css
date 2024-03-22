@@ -324,6 +324,23 @@ output {
   font-size: 20px;
 }
 
+#clearFiltersButton {
+  background-color: #f44336; /* צבע רקע */
+  color: white; /* צבע טקסט */
+  padding: 8px; /* רווח בתוך הכפתור */
+  text-align: center; /* תיאום הטקסט למרכז הכפתור */
+  display: inline-block; /* תצוגה כבלוק אך בלי להפריד את האלמנטים */
+  border: none; /* מסגרת ריקה */
+  border-radius: 20px; /* פינות מעוגלות */
+  cursor: pointer; /* מראה סמן עכבר כעכבר יד */
+  transition: background-color 0.3s; /* אנימציה על צבע רקע */
+  font-size: 14px; /* גודל הטקסט */
+}
+
+#clearFiltersButton:hover {
+  background-color: #d32f2f; /* צבע רקע בעת העכבר מעל הכפתור */
+}
+
  /*------------------------------- table ----------------------------*/
 
  table {

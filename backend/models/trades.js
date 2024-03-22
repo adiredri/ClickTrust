@@ -1,34 +1,59 @@
 const mongoose = require('mongoose');
 
 const tradeSchema = new mongoose.Schema({
-  IDtrans: {
-        type: String,
-        required: true,
+  DateTrans: {
+    type: Date,
+    required: true,
   },
-  AssetName: {
+  TimeTrans: {
+    type: String,
+    required: true
+  },
+  AssetID: {
+    type: String,
+    required: true
+  },
+  Category: {
+    type: String,
+    required: true
+  },
+  NameDigitalAsset: {
+    type: String,
+    required: true
+  },
+  Place: {
     type: String,
     required: true,
   },
-  purchaseOrSale: {
+  Date: {
+    type: Date,
+    required: true,
+  },
+  Time: {
     type: String,
     required: true
   },
+  Quantity: {
+    type: Number,
+    required: true,
+  },
   Price: {
     type: Number,
-    required: true
+    required: true,
   },
-  Date: {
-    type: Date,
-    required: true
+  EmailSeller: {
+    type: String,
+    required: true,
   },
-  Time: {
-    type: String, 
-    required: true
-  }
+  EmailBuyer: {
+    type: String,
+    required: true,
+  },
+
 });
 
 // Define a unique compound index on CoinName and UserName
-tradeSchema.index({ AssetName: 1, UserName: 1 }, { unique: true });
+tradeSchema.index({ EmailSeller: 1, EmailBuyer: 1 }, { unique: true });
 
 const Trade = mongoose.model('Trade', tradeSchema);
 

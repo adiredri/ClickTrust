@@ -83,6 +83,7 @@ router.post('/addAsset', async (req, res) => {
     Quantity: req.body.Quantity,
     Price: req.body.Price,
     Email: req.body.Email,
+    Available: req.body.Available,
   });
 
   try {   
@@ -178,6 +179,54 @@ try {
 //  ------------------ TRADES ---------------------
 
 // Adds trade to DB or updates
+
+// Adds trade to the DB 
+router.post('/addTrade', async (req, res) => {
+  const trade = new Trade({
+    DateTrans: req.body.DateTrans,
+    TimeTrans: req.body.TimeTrans,
+    AssetID : req.body.AssetID,
+    Category: req.body.Category,
+    NameDigitalAsset: req.body.NameDigitalAsset,
+    Place: req.body.Place,
+    Date: req.body.Date,
+    Time: req.body.Time,
+    Quantity: req.body.Quantity,
+    Price: req.body.Price,
+    EmailSeller: req.body.EmailSeller,
+    EmailBuyer: req.body.EmailBuyer,
+  });
+
+  try {   
+      // Save the Trade to the database
+      await trade.save();
+      console.log('Trade added successfully'); 
+      // Send a response back to the client-side to handle the confirmation
+      res.send({ tradeAdded: true });
+    
+    if (loguser) {
+
+      // Retrieve user's role based on email and ID
+      if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
+        res.redirect('/admin?Email=' + loguser.EmailBuyer);
+      } else {
+        // Redirect to the customer index page and pass the first name as a query parameter in the URL
+        res.redirect('/customer?Email=' + loguser.EmailBuyer);
+      }
+    } else {
+      // Display an alert for no such user
+      const errorMessage = 'No user found with the provided email and password.';
+      console.error(errorMessage);
+      res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
+    }
+    
+  } catch (error) {
+    const errorMessage = 'An error occurred while adding the trade.';
+    console.error(errorMessage);
+    res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
+});
+
+/*
 router.post('/addTrade', async (req, res) => {
   try {
     // Extract the trade data from the request body
@@ -220,6 +269,9 @@ router.post('/addTrade', async (req, res) => {
     res.status(500).json({ error: 'An error occurred while adding/updating the trade.' });
   }
 });
+
+*/
+
 
 // Deletes trade from DB or updates
 router.post('/reduceTrade', async (req, res) => {

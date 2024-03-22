@@ -47,6 +47,7 @@
             <input type="number" name="Quantity" placeholder="Quantity" required><br><br>
             <input type="number" name="Price" placeholder="Price ($)" required><br><br>
             <input type="hidden" name="Email" id="Email" required>
+            <input type="hidden" name="Available" id="Available" value="true" required>
             <input type="submit" value="Add Asset" id="add-button">
         </form>
         <div class="conformation" style="display: none;">
@@ -103,6 +104,7 @@
 
     // Fill the email input field with the retrieved email
     document.getElementById('Email').value = Email;
+
   
     // Clear all input fields
     function clearFields() {
@@ -113,7 +115,9 @@
       $('#Time').val('');
       $('#Quantity').val('');
       $('#Price').val('');
-      $('#Email').val('');
+      $('#Email').val('');    
+      $('#Available').val('');
+
     }
   
     // Event listener for the form submission

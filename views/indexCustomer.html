@@ -65,6 +65,16 @@
       <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
       <input type="range" id="price" name="price" min="0" max="5000" value="200" onclick="filterAssets()">
   </div>
+  <div style="display: flex; align-items: center; margin-right: 30px;">
+    <label for="Sort" style="margin-right: 10px;">Sort Price</label>
+      <button id="sortPriceButton" onclick="sortAssetsByPriceDescending()" style="background: none; border: none; padding: 0;">
+            <img src="images/sort.png" alt="Sort by Price" width="30" height="30">
+        </button>
+    </div>
+    <div style="display: flex; align-items: center; margin-right: 30px;">
+      <button id="clearFiltersButton" onclick="clearFilters()">Clear Filters</button>
+</div>
+
   </div>
 
   <table>
@@ -178,7 +188,11 @@ const fname = emailParts[0]; // Assuming the name is before the "@" symbol
 <!--------------------- DB ------------------------>
 
 <script>
+
+ // ----------------------  ADD ASSET -----------------------
+
 document.addEventListener("DOMContentLoaded", function () {
+  
   const Email = sessionStorage.getItem('Email');
 
   async function fetchAssets() {
@@ -210,12 +224,16 @@ document.addEventListener("DOMContentLoaded", function () {
         <td>${asset.Quantity}</td>
         <td>${asset.Price}</td>
         <td>
-          <button class="buy-button">Buy</button>
+          <button class="buy-button" onclick="addTrade(event)">Buy</button>
         </td>
       `;
+
       assetTableBody.appendChild(row);
     });
   }
+
+
+   // ----------------------  FILTERS & SORTS -----------------------
 
   function filterAssets() {
     const searchByDate = document.getElementById('DateTrans');
@@ -250,11 +268,45 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   }
+  let ascendingOrder = true;
+
+function sortAssetsByPriceDescending() {
+    const assetTableBody = document.getElementById('assetTableBody');
+    const assets = Array.from(assetTableBody.getElementsByTagName('tr'));
+
+    // סידור הנכסים לפי המחיר מנמוך לגבוה או מגבוה לנמוך בהתאם למשתנה ascendingOrder
+    assets.sort((a, b) => {
+        const priceA = parseFloat(a.children[7].innerText);
+        const priceB = parseFloat(b.children[7].innerText);
+        return ascendingOrder ? priceA - priceB : priceB - priceA;
+    });
+
+    // ניקוי תוכן הטבלה
+    assetTableBody.innerHTML = '';
+
+    // הוספת הנכסים שממוינים מחדש לטבלה
+    assets.forEach(asset => {
+        assetTableBody.appendChild(asset);
+    });
+
+    // שינוי כיוון המיון ללחיצה הבאה
+    ascendingOrder = !ascendingOrder;
+}
+function clearFilters() {  // Clear the sorts
+  document.getElementById('DateTrans').value = '';
+  document.getElementById('Name').value = '';
+  document.getElementById('Category').value = '';
+  document.getElementById('price').value = '';
+  filterAssets(); // קריאה לפונקציה לסינון
+}
+
+document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
   // Event listeners
   document.getElementById('DateTrans').addEventListener('input', filterAssets);
   document.getElementById('Name').addEventListener('input', filterAssets);
   document.getElementById('Category').addEventListener('input', filterAssets);
   document.getElementById('price').addEventListener('input', filterAssets);
+  document.getElementById('sortPriceButton').addEventListener('click', sortAssetsByPriceDescending);
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -268,36 +320,68 @@ document.addEventListener("DOMContentLoaded", function () {
     return timeString;
   }
 
-  async function buyAsset(coinId, price, amount) {
-      const totalPrice = price * amount;
-      const username = firstName;
 
-      if (confirm('Are you sure you want to buy?')) {
-        const response = await fetch('/addTrade', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            CoinName: coinNames[coinId],
-            Amount: amount,
-            Value: totalPrice,
-            UserName: username,
-          }),
+ // ----------------------  BUY & ADD TRADE -----------------------
+
+ function addTrade(event) {
+  // קבלת התאריך והשעה הנוכחיים
+  const currentDate = new Date();
+  const DateTrans = currentDate.toISOString().slice(0, 10); // קבלת התאריך בפורמט YYYY-MM-DD
+  const TimeTrans = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // קבלת השעה בפורמט HH:MM
+  const EmailBuyer = Email;
+
+  const row = event.target.closest('tr'); // מציאת השורה המכילה את הכפתור
+  const cells = row.querySelectorAll('td'); // מציאת כל תאי השורה
+
+  // קבלת ה-ID של הנכס הדיגיטלי מתא התעודה
+  const AssetID = cells[0].textContent;
+
+  // שליפת פרטי הנכס הדיגיטלי ממסד הנתונים על פי ה-ID
+  fetch(`/allAssets/${AssetID}`)
+    .then(response => response.json())
+    .then(asset => {
+      // איסוף הנתונים מהנכס הדיגיטלי
+      const { Category, NameDigitalAsset, Place, Date, Time, Quantity, Price, Email } = asset;
+
+      // בניית אובייקט עם הנתונים למעבר
+      const tradeData = {
+        DateTrans,
+        TimeTrans,
+        AssetID,
+        Category,
+        NameDigitalAsset,
+        Place,
+        Date,
+        Time,
+        Quantity,
+        Price,
+        Email,
+        EmailBuyer,
+      };
+
+      // שליחת בקשת POST לנתיב "/addTrade" עם הנתונים של המסחר החדש
+      fetch('/addTrade', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tradeData),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Trade added successfully:', data);
+          // כאן תוכל להוסיף פעולות נוספות לאחר הוספת המסחר, כגון עדכון התצוגה או הפניה לדף אחר
+        })
+        .catch(error => {
+          console.error('Error adding trade:', error);
+          // טיפול בשגיאה במידה והוספת המסחר נכשלה
         });
-
-        if (response.ok) {
-          alert('Trade confirmed.');
-          location.reload(); // Refresh the page
-        } else {
-          alert('Failed to perform the purchase.');
-        }
-      } else {
-        // User canceled the trade
-        alert('Trade canceled.');
-      }
-    }
-
+    })
+    .catch(error => {
+      console.error('Error fetching asset:', error);
+      // טיפול בשגיאה במידה ושליפת הנכס הדיגיטלי נכשלה
+    });
+}
 
   // Fetch assets when the page loads
   fetchAssets();
