@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require('path');
 const User = require('../models/user');
 const Asset = require('../models/asset');
-//const Trade = require('../models/trades');
+const Trade = require('../models/trades');
 
 //  ----------------- SIGNUP --------------------
 
@@ -72,7 +72,8 @@ router.post('/login', async (req, res) => {
 
 //  ------------------ ASSETS ---------------------
 
-// Adds asset to the DB 
+// --------- Adds asset to the DB -----------
+
 router.post('/addAsset', async (req, res) => {
   const asset = new Asset({
     Category: req.body.Category,
@@ -91,7 +92,7 @@ router.post('/addAsset', async (req, res) => {
       await asset.save();
       console.log('Asset added successfully'); 
       // Send a response back to the client-side to handle the confirmation
-      res.send({ assetAdded: true });
+      res.send(`<script>alert('Asset added successfully.'); window.location.href='/Asset'</script>`);
     
     if (loguser) {
 
@@ -115,11 +116,12 @@ router.post('/addAsset', async (req, res) => {
     res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
 });
 
+
 // Sends all the assets from DB to allassets page
 router.get('/allAssets', async (req, res) => {
   try {
     // Retrieve all assets from the database
-    const assets = await Asset.find({}, { _id: 0, __v: 0 }).sort({ Value: -1 });
+    const assets = await Asset.find().sort();
     res.json(assets);
   } catch (error) {
     console.error('Error retrieving assets:', error);
@@ -141,60 +143,39 @@ router.get('/assets', async (req, res) => {
   }
 });
 
-// Deletes assets from DB
-router.delete('/assets/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await Asset.findByIdAndDelete(id);
-    res.sendStatus(204); // No content
-  } catch (error) {
-    console.error('Error deleting asset:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
 
-// Updates asset in the DB
+// Updates asset available = false in the DB when it sold.
 router.patch('/assets/:id', async (req, res) => {
-try {
-    const { id } = req.params;
-    const updates = req.body;
-    const asset = await Asset.findByIdAndUpdate(id, updates, { new: true });
-    if (!asset) {
-      return res.status(404).json({ error: 'Asset not found' });
-    }
-    const trades = await Trade.find({ AssetName: asset.AssetName });
-    for (let i = 0; i < trades.length; i++) {
-      const trade = trades[i];
-      trade.Value = asset.Price;
-      await trade.save();
-    }
-    res.json(asset);
+  const AssetId = req.params.id;
+  try {
+    const updatedAsset = await Asset.findOneAndUpdate(
+      { _id: AssetId }, // מצא את הנכס לפי ה-ID
+      { $set: { Available: false } }, // עדכן את השדה Available לערך false
+      { new: true } // החזר את הנכס המעודכן
+    );
 
+    if (!updatedAsset) {
+      return res.status(404).send("Asset not found");
+    }
+
+    res.status(200).send("Asset updated successfully");
   } catch (error) {
-    console.error('Error updating asset:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating the asset:", error);
+    res.status(500).send("Error updating the asset");
   }
 });
 
 //  ------------------ TRADES ---------------------
 
-// Adds trade to DB or updates
+// ----------- Adds trade to DB ------------
 
-// Adds trade to the DB 
 router.post('/addTrade', async (req, res) => {
   const trade = new Trade({
-    DateTrans: req.body.DateTrans,
-    TimeTrans: req.body.TimeTrans,
+    TransDate: req.body.TransDate,
+    TransTime: req.body.TransTime,
     AssetID : req.body.AssetID,
-    Category: req.body.Category,
-    NameDigitalAsset: req.body.NameDigitalAsset,
-    Place: req.body.Place,
-    Date: req.body.Date,
-    Time: req.body.Time,
-    Quantity: req.body.Quantity,
-    Price: req.body.Price,
-    EmailSeller: req.body.EmailSeller,
-    EmailBuyer: req.body.EmailBuyer,
+    SellerEmail: req.body.SellerEmail,
+    BuyerEmail: req.body.BuyerEmail,
   });
 
   try {   
@@ -202,137 +183,39 @@ router.post('/addTrade', async (req, res) => {
       await trade.save();
       console.log('Trade added successfully'); 
       // Send a response back to the client-side to handle the confirmation
-      res.send({ tradeAdded: true });
-    
-    if (loguser) {
+      res.status(200).json({ success: true }); // Sending a success response
 
-      // Retrieve user's role based on email and ID
-      if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
-        res.redirect('/admin?Email=' + loguser.EmailBuyer);
-      } else {
-        // Redirect to the customer index page and pass the first name as a query parameter in the URL
-        res.redirect('/customer?Email=' + loguser.EmailBuyer);
-      }
-    } else {
-      // Display an alert for no such user
-      const errorMessage = 'No user found with the provided email and password.';
-      console.error(errorMessage);
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
-    }
-    
   } catch (error) {
-    const errorMessage = 'An error occurred while adding the trade.';
-    console.error(errorMessage);
-    res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
-});
-
-/*
-router.post('/addTrade', async (req, res) => {
-  try {
-    // Extract the trade data from the request body
-    const { AssetID, Category, Value, Email } = req.body;
-
-    // Check if a trade with the same asset and username exists
-    const existingTrade = await Trade.findOne({ AssetName, Email });
-    const theUser = await User.findOne({ Email })
-    const theAsset = await Asset.findOne({ AssetName })
-
-    if (existingTrade && theUser) {
-      // If a trade exists, update its properties
-      existingTrade.Amount += Amount;
-      existingTrade.Value = (theAsset.Price);
-      existingTrade.LastDate = new Date();
-
-      // Save the updated trade and Balance of User
-      const updatedTrade = await existingTrade.save();
-      await theUser.save()
-
-      res.status(200).json(updatedTrade);
-    } else {
-      // If no trade exists, create a new trade object with the current date
-      const newTrade = new Trade({
-        AssetName,
-        Amount,
-        Value,
-        UserName,
-        LastDate: new Date() // Set the Date field to the current date and time
-      });
-      const theSameEmail = await User.findOne({ Email })
-      theSameEmail.Balance -= Value;
-      // Save the new trade to the database
-      const savedTrade = await newTrade.save();
-      await theSameEmail.save()
-
-      res.status(200).json(savedTrade);
-    }
-  } catch (error) {
-    res.status(500).json({ error: 'An error occurred while adding/updating the trade.' });
+    console.error('An error occurred while adding the trade:', error);
+    res.status(500).json({ success: false, error: 'An error occurred while adding the trade' }); // Sending an error response
   }
 });
 
-*/
-
-
-// Deletes trade from DB or updates
-router.post('/reduceTrade', async (req, res) => {
+// get email seller from asset
+router.get('/assets/:id/email', async (req, res) => {
   try {
-    // Extract the trade data from the request body
-    const { AssetName, Amount, Value, UserName } = req.body;
-
-    // Find the trade with the given asset and username
-    const existingTrade = await Trade.findOne({ AssetName, UserName });
-    const theUser = await User.findOne({ Email })
-    const theAsset = await Asset.findOne({ AssetName })
-
-    if (existingTrade) {
-      if (Amount < existingTrade.Amount) {
-        // If the new amount is less than the current amount, update the trade
-        existingTrade.Amount -= Amount;
-        existingTrade.Value = (existingTrade.Amount * theAsset.Price);
-        existingTrade.LastDate = new Date();
-        theUser.Balance += Value;
-
-        // Save the updated trade
-        const updatedTrade = await existingTrade.save();
-        await theUser.save();
-
-        res.status(200).json(updatedTrade);
-      }
-      else if (Amount === existingTrade.Amount) {
-
-        theUser.Balance += Value;
-        await theUser.save();
-        existingTrade.deleteOne();
-        res.status(200).json({ message: 'Trade deleted successfully.' });
-      } else {
-        // If the new amount is greater than the current amount, it is not a possible action
-        res.status(400).json({ error: 'Invalid action. The requested amount is greater than the current amount.' });
-      }
-    } else {
-      res.status(404).json({ error: 'Trade not found.' });
+    const asset = await Asset.findById(req.params.id);
+    if (!asset) {
+      throw new Error('Asset not found');
     }
+    res.json({ Email: asset.Email });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while reducing/deleting the trade.' });
+    console.error('Error fetching asset email:', error);
+    res.status(500).json({ error: 'Failed to fetch asset email' });
   }
 });
 
-// Gets candidate keys of user and asset and returns the amaount field of the relevante trade
-router.post('/getOwnedAmount', async (req, res) => {
+// get Available from asset
+router.get('/assets/:id/Available', async (req, res) => {
   try {
-    const { AssetName, Email } = req.body;
-
-    // Find the trade with the specified asset name and user name
-    const trade = await Trade.findOne({ AssetName, UserName });
-
-    if (trade) {
-      // Return the owned amount for the asset
-      res.status(200).json({ amount: trade.Amount });
-    } else {
-      // If no trade exists for the asset and user, return 0 as the owned amount
-      res.status(200).json({ amount: 0 });
+    const asset = await Asset.findById(req.params.id);
+    if (!asset) {
+      throw new Error('Asset not found');
     }
+    res.json({ Available: asset.Available });
   } catch (error) {
-    res.status(500).json({ error: 'An error occurred while retrieving the owned amount.' });
+    console.error('Error fetching asset Available:', error);
+    res.status(500).json({ error: 'Failed to fetch asset Available' });
   }
 });
 
@@ -404,31 +287,5 @@ router.get('/alltrades', async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve trades' });
   }
 });
-
-// Sends all the amaounts of assets that a user has to the trade page
-router.get('/user/asset', async (req, res) => {
-  const email = req.query.email;
-  try {
-    // Find all trades for the specified user
-    const trades = await Trade.find({ Email: email });
-
-    // Create an object to store the asset amounts
-    const AssetAmounts = {};
-
-    // Iterate over the trades and calculate the total amount for each asset
-    for (const trade of trades) {
-      const AssetName = trade.AssetName;
-      const amount = trade.Amount;
-
-      // Update the asset amount in the object
-      assetAmounts[assetName] = (assetAmounts[assetName] || 0) + amount;
-    }
-    res.json(assetAmounts);
-  } catch (error) {
-    console.error('Error fetching asset amounts:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 
 module.exports = router;
