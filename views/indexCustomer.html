@@ -73,9 +73,8 @@
     </div>
     <div style="display: flex; align-items: center; margin-right: 30px;">
       <button id="clearFiltersButton" onclick="clearFilters()">Clear Filters</button>
+    </div>
 </div>
-
-  </div>
 
   <table>
     <thead>
@@ -300,11 +299,11 @@ async function createTransaction(AssetID, BuyerEmail, SellerEmail) {
   
   fetchAssets();   // Fetch assets when the page loads
 
-   // ----------------------  ADD ASSET -----------------------
+   // ----------------------  SHOW ASSETS -----------------------
 
   async function fetchAssets() {
     try {
-      const response = await fetch('/assets');
+      const response = await fetch('/assets/available');
       if (!response.ok) {
         throw new Error('Failed to fetch assets');
       }
@@ -341,40 +340,7 @@ async function createTransaction(AssetID, BuyerEmail, SellerEmail) {
 
    // ----------------------  FILTERS & SORTS -----------------------
 
-   
-   // Get Available of seller  // להמשיך מפה
 
-   async function getAvailableById(AssetID) {
-  try {
-    const response = await fetch(`/assets/${AssetID}/Available`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch Available');
-    }
-    const { Available } = await response.json();
-    return Available;
-  } catch (error) {
-    console.error('Error fetching Available:', error);
-    return null;
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-    showAvailabilityAssets();
-});
-
-   async function showAvailabilityAssets()
-  {
-        // Fetch availability for the current asset
-        const AssetID = asset.children[0].innerText;
-        const Available = getAvailableById(AssetID);
-
-            if (Available !== true) {        // Hide the asset if it's not available
-        asset.style.display = 'none';
-      }
-  }        // למצוא איך מציגים רק את הנכסים שזמינים למכירה מבלי לפגוע במסננים
-
-
-  
    async function filterAssets() {
     const searchByDate = document.getElementById('DateTrans');
     const searchByName = document.getElementById('Name');
@@ -460,7 +426,7 @@ function clearFilters() {  // Clear the sorts
 
   // ----------------------------------------------------------------
 
-});
+  });
 
 </script>
 

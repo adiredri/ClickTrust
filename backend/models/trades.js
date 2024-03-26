@@ -10,7 +10,8 @@ const tradeSchema = new mongoose.Schema({
     required: true
   },
   AssetID: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Asset',
     required: true
   },
   SellerEmail: {

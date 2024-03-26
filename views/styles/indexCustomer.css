@@ -362,6 +362,12 @@ th:first-child, td:first-child {
   border-left: 1px solid rgba(0, 0, 0, 0.1); /* קו שמאלי */
 }
 
+tbody {
+  display: block;
+  overflow-y: auto; /* הוספת גלגולים אנכיים */
+  max-height: 400px;
+}
+
 tbody tr:nth-child(even) {
   background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)); /* גריד לרקע כל השורות הזוגיות */
 }
@@ -410,7 +416,6 @@ tr {
   justify-content: center; /* מרכוז אופקי */
   align-items: center; /* מרכוז אנכי */
 }
-
 
 .buy-button {
   background-color: #4CAF50; /* צבע ירוק עדין */

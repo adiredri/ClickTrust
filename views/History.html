@@ -36,24 +36,34 @@
 
         <!-- start left form -->
 
+<div class="text-box" style="height: 700px;">
   <div class="container left">
-    <h1 style="margin-top: -300px;">Transaction History</h1>
+    <h1 style="margin-top: -20px;">Transaction History</h1>
     <div class="search-container">
       <div>
         <label for="DateTrans">Search by Date:</label>
-        <input type="date" id="DateTrans" style="width: 150px;">
+        <input type="date" id="DateTrans" style="width: 180px;" oninput="filterAssets()">
       </div>
       <div>
-        <label for="BuyerSeller">Search by Buyer/Seller</label>
-        <input type="text" id="BuyerSeller">
+        <label for="Name">Search by Name</label>
+        <input type="text" id="Name" oninput="filterAssets()">
       </div>
       <div>
-        <label for="BuyerSeller">Search by Buyer/Seller</label>
-        <input type="text" id="BuyerSeller">
+        <label for="Category">Search by Category</label>
+        <input type="text" id="Category" oninput="filterAssets()">
       </div>
       <div class="price-slider">
         <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
-        <input type="range" id="price" name="price" min="0" max="5000" value="200">
+        <input type="range" id="price" name="price" min="0" max="5000" value="200" onclick="filterAssets()">
+    </div>
+    <div style="display: flex; align-items: center; margin-right: 30px;">
+      <label for="Sort" style="margin-right: 10px;">Sort Price</label>
+        <button id="sortPriceButton" onclick="sortAssetsByPriceDescending()" style="background: none; border: none; padding: 0;">
+              <img src="images/sort.png" alt="Sort by Price" width="30" height="30">
+        </button>
+      </div>
+      <div style="display: flex; align-items: center; margin-right: 30px;">
+        <button id="clearFiltersButton" onclick="clearFilters()">Clear Filters</button>
     </div>
     </div>
 
@@ -61,12 +71,18 @@
       <thead>
         <tr>
           <th>ID Trans.</th>
-          <th>Purchase/Sale</th>
-          <th>Price</th>
+          <th>Date Trans.</th>
+          <th>Time Trans.</th>
+          <th>Purchase/ Sale</th>
+          <th>Asset ID</th>
+          <th>Category</th>
+          <th>Asset Name</th>
+          <th>Place</th>
           <th>Date</th>
           <th>Time</th>
-          <th>ID Buyer/Seller</th>
-          <th>Name Buyer/Seller</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Buyer/Seller</th>
         </tr>
       </thead>
       <tbody id="tradeTableBody">
@@ -74,8 +90,9 @@
       </tbody>
     </table>
   </div>
+</div>
 
-            <!-- end right form -->
+            <!-- end left form -->
 
             <!-- start right form -->
 
@@ -128,70 +145,176 @@
    homeLink.setAttribute('href', homePageUrl);
 </script>
 
+
+
+
+
+
 <script>
 
-  // Make a request to the server and fetch the trades data
-  fetch('/alltrades')
-    .then(response => response.json())
-    .then(data => {
-      // Sort the trades by Email in alphabetical order
-      data.sort((a, b) => a.Email.localeCompare(b.Email));
+  document.addEventListener("DOMContentLoaded", function () {
 
-      const tradeTableBody = document.getElementById('tradeTableBody');
-      const searchNameInput = document.getElementById('searchName');
-      const searchValueInput = document.getElementById('searchValue');
-      const searchUserInput = document.getElementById('searchUser');
+   // ----------------------  SHOW ASSETS -----------------------
+   function checkAssetInfo(trade) {
+  if (Array.isArray(trade.asset_info) && trade.asset_info.length > 0) {
+    console.log("יש נתונים במערך asset_info");
+    return trade.asset_info[0];
+  } else {
+    console.log("אין נתונים במערך asset_info");
+    return {};
+  }
+}
 
-      const formatNumber = (number) => {
-        const formattedNumber = Number(number).toFixed(2);
-        return formattedNumber.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      };
+async function renderAssets() {
+  const userEmail = sessionStorage.getItem('Email');
+  try {
+    const response = await fetch(`/user-trades?Email=${userEmail}`);
+    const userTrades = await response.json();
+    console.log('User trades:', userTrades); // Add this line to check the received data
 
-      const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options);
-      };
+    const tradeTableBody = document.getElementById('tradeTableBody');
+    tradeTableBody.innerHTML = ''; // Clear existing rows
 
-      const filterTrades = () => {
-        const searchName = searchNameInput.value.toLowerCase();
-        const searchValue = searchValueInput.value;
-        const searchUser = searchUserInput.value.toLowerCase();
+    userTrades.forEach((trade) => {
+      console.log('Trade:', trade); // Add this line to check each trade object
 
-        const filteredTrades = data.filter(trade => {
-          const tradeName = trade.CoinName.toLowerCase();
-          const tradeValue = trade.Value;
-          const tradeUser = trade.UserName.toLowerCase();
+      const asset = checkAssetInfo(trade); // Check asset info
+      console.log('Asset:', asset); // Add this line to check the asset info
 
-          return tradeName.includes(searchName) &&
-            (!searchValue || tradeValue <= searchValue) &&
-            tradeUser.includes(searchUser);
-        });
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${trade._id}</td>
+        <td>${formatDate(trade.TransDate)}</td>
+        <td>${trade.TransTime}</td>
+        <td>${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
+        <td>${trade.AssetID}</td>
+        <td>${asset.Category}</td>
+        <td>${asset.NameDigitalAsset || ''}</td>
+        <td>${asset.Place || ''}</td>
+        <td>${formatDate(asset.Date) || ''}</td>
+        <td>${asset.Time || ''}</td>
+        <td>${asset.Quantity || ''}</td>
+        <td>${asset.Price || ''}</td>
+        <td>${trade.BuyerEmail === userEmail ? trade.SellerEmail : trade.BuyerEmail}</td>
+      `;
+      tradeTableBody.appendChild(row);
+    });
+  } catch (error) {
+    console.error('Error fetching user trades:', error);
+  }
+}
 
-        renderTrades(filteredTrades);
-      };
+async function getCategoryByAssetId(assetId) {
+  try {
+    // מצא את הנכס על פי ה־AssetID
+    const asset = await Asset.findById(assetId);
 
-      const renderTrades = (trades) => {
-        tradeTableBody.innerHTML = '';
-        trades.forEach(trade => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${trade.UserName}</td>
-            <td>${trade.CoinName}</td>
-            <td>${trade.Amount}</td>
-            <td>${formatNumber(trade.Value)}</td>
-            <td>${formatDate(trade.LastDate)}</td>
-          `;
-          tradeTableBody.appendChild(row);
-        });
-      };
+    if (!asset) {
+      throw new Error('Asset not found');
+    }
 
-      searchNameInput.addEventListener('input', filterTrades);
-      searchValueInput.addEventListener('input', filterTrades);
-      searchUserInput.addEventListener('input', filterTrades);
+    // החזר את הקטגוריה של הנכס
+    return asset.Category;
+  } catch (error) {
+    console.error('Error fetching asset category:', error);
+    throw new Error('Failed to fetch asset category');
+  }
+}
 
-      renderTrades(data);
-    })
-    .catch(error => console.error('Error:', error));
+// Call the renderAssets function when the page is loaded
+window.onload = renderAssets;
+
+   // ----------------------  FILTERS & SORTS -----------------------
+
+/*
+   async function filterAssets() {
+    const searchByDate = document.getElementById('DateTrans');
+    const searchByName = document.getElementById('Name');
+    const searchByCategory = document.getElementById('Category');
+    const maxPrice = document.getElementById('price');
+
+    const assets = Array.from(document.getElementById('tradeTableBody').getElementsByTagName('tr'));
+
+    assets.forEach((asset) => {
+      const DateTrans = asset.children[1].innerText;
+      const AssetName = asset.children[5].innerText;
+      const Category = asset.children[6].innerText;
+      const price = parseFloat(asset.children[11].innerText);
+
+      asset.style.display = '';
+
+      if (searchByDate.value && !DateTrans.toLowerCase().includes(searchByDate.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (searchByName.value && !AssetName.toLowerCase().includes(searchByName.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (searchByCategory.value && !Category.toLowerCase().includes(searchByCategory.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (maxPrice.value && price > parseFloat(maxPrice.value)) {
+        asset.style.display = 'none';
+      }
+    });
+  }
+  let ascendingOrder = true;
+
+    function sortAssetsByPriceDescending() {
+    const tradeTableBody = document.getElementById('tradeTableBody');
+    const assets = Array.from(tradeTableBody.getElementsByTagName('tr'));
+
+    assets.sort((a, b) => {
+        const priceA = parseFloat(a.children[11].innerText);
+        const priceB = parseFloat(b.children[11].innerText);
+        return ascendingOrder ? priceA - priceB : priceB - priceA;
+    });
+
+    tradeTableBody.innerHTML = '';
+    assets.forEach(asset => {
+    tradeTableBody.appendChild(asset);
+    });
+
+    ascendingOrder = !ascendingOrder;
+}
+
+function clearFilters() {  // Clear the sorts
+  document.getElementById('DateTrans').value = '';
+  document.getElementById('Name').value = '';
+  document.getElementById('Category').value = '';
+  document.getElementById('price').value = '';
+  filterAssets(); // קריאה לפונקציה לסינון
+}
+
+  // ---------- Event listeners ----------
+
+  document.getElementById('DateTrans').addEventListener('input', filterAssets);
+  document.getElementById('Name').addEventListener('input', filterAssets);
+  document.getElementById('Category').addEventListener('input', filterAssets);
+  document.getElementById('price').addEventListener('input', filterAssets);
+  document.getElementById('sortPriceButton').addEventListener('click', sortAssetsByPriceDescending);
+  document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
+*/
+  // ---------- FORMATS -----------
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    // Format the date as desired (e.g., YYYY-MM-DD)
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    return formattedDate;
+  }
+
+  function formatTime(timeString) {
+    // Implement time formatting if needed
+    return timeString;
+  }
+
+  // ----------------------------------------------------------------
+
+  });
+
 </script>
 
 

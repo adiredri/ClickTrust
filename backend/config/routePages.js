@@ -116,20 +116,7 @@ router.post('/addAsset', async (req, res) => {
     res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
 });
 
-
-// Sends all the assets from DB to allassets page
-router.get('/allAssets', async (req, res) => {
-  try {
-    // Retrieve all assets from the database
-    const assets = await Asset.find().sort();
-    res.json(assets);
-  } catch (error) {
-    console.error('Error retrieving assets:', error);
-    res.status(500).json({ error: 'Failed to retrieve assets' });
-  }
-});
-
-// Sends all the assets to the manage asset page
+// Sends all the assets 
 router.get('/assets', async (req, res) => {
   try {
     // Retrieve all assets from the database
@@ -142,7 +129,6 @@ router.get('/assets', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 // Updates asset available = false in the DB when it sold.
 router.patch('/assets/:id', async (req, res) => {
@@ -164,6 +150,35 @@ router.patch('/assets/:id', async (req, res) => {
     res.status(500).send("Error updating the asset");
   }
 });
+
+// get email seller from asset
+router.get('/assets/:id/email', async (req, res) => {
+  try {
+    const asset = await Asset.findById(req.params.id);
+    if (!asset) {
+      throw new Error('Asset not found');
+    }
+    res.json({ Email: asset.Email });
+  } catch (error) {
+    console.error('Error fetching asset email:', error);
+    res.status(500).json({ error: 'Failed to fetch asset email' });
+  }
+});
+
+// get all available assets
+router.get('/assets/available', async (req, res) => {
+  try {
+    const assets = await Asset.find({ Available: true });
+    if (!assets) {
+      throw new Error('No available assets found');
+    }
+    res.json(assets);
+  } catch (error) {
+    console.error('Error fetching available assets:', error);
+    res.status(500).json({ error: 'Failed to fetch available assets' });
+  }
+});
+
 
 //  ------------------ TRADES ---------------------
 
@@ -191,34 +206,37 @@ router.post('/addTrade', async (req, res) => {
   }
 });
 
-// get email seller from asset
-router.get('/assets/:id/email', async (req, res) => {
+router.get('/user-trades', async (req, res) => {
+  const userEmail = req.query.Email; // get the email from the query parameters
   try {
-    const asset = await Asset.findById(req.params.id);
-    if (!asset) {
-      throw new Error('Asset not found');
+    const userTrades = await Trade.aggregate([
+      {
+        $match: {
+          $or: [
+            { BuyerEmail: userEmail },
+            { SellerEmail: userEmail }
+          ]
+        }
+      },
+      {
+        $lookup:
+          {
+            from: "assets",
+            localField: "AssetID",
+            foreignField: "_id",
+            as: "asset_info"
+          }
+      }
+    ]);
+    if (!userTrades || userTrades.length === 0) { // Check if userTrades is empty
+      throw new Error('No trades found for this user');
     }
-    res.json({ Email: asset.Email });
+    res.json(userTrades);
   } catch (error) {
-    console.error('Error fetching asset email:', error);
-    res.status(500).json({ error: 'Failed to fetch asset email' });
+    console.error('Error fetching user trades:', error);
+    res.status(500).json({ error: 'Failed to fetch user trades' });
   }
 });
-
-// get Available from asset
-router.get('/assets/:id/Available', async (req, res) => {
-  try {
-    const asset = await Asset.findById(req.params.id);
-    if (!asset) {
-      throw new Error('Asset not found');
-    }
-    res.json({ Available: asset.Available });
-  } catch (error) {
-    console.error('Error fetching asset Available:', error);
-    res.status(500).json({ error: 'Failed to fetch asset Available' });
-  }
-});
-
 //  ----------------- Sends ------------------
 
 // Sends to customer home page
@@ -276,16 +294,6 @@ router.get('/trades', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'History.html'));
 });
 
-// Sends all the trades from DB to allTrades page
-router.get('/alltrades', async (req, res) => {
-  try {
-    // Retrieve all trades from the database
-    const trades = await Trade.find({}, { _id: 0, __v: 0 }).sort({ Value: -1 });
-    res.json(trades);
-  } catch (error) {
-    console.error('Error retrieving trades:', error);
-    res.status(500).json({ error: 'Failed to retrieve trades' });
-  }
-});
+
 
 module.exports = router;
