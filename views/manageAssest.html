@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History</title>
-    <link rel="stylesheet" href="styles/History.css">
+    <title>ManageAssets</title>
+    <link rel="stylesheet" href="styles/manage.css">
 </head>
 <body>
 
@@ -18,9 +18,9 @@
     </div>
     <nav>
         <div class="nav-bar">
-        <a href="Contact.html">Contact Us</a>
-        <a href="About.html">About Us</a>
-        <a href="LogIn.html">Cart</a>
+        <a href="manageUsers.html">Manage Users</a>
+        <a href="customerService.html">Customer Service</a>
+        <a href="History.html">History</a>
         <a href="SignUp.html">Log Out</a>
         </div>
     </nav>
@@ -34,14 +34,12 @@
 
         <!-- end video, navbar, logo, widget -->
 
-        <!-- start left form -->
-
-<div class="text-box" style="height: 700px;">
-  <div class="container left">
-    <h1 style="margin-top: -250px;">Transaction History</h1>
+<div class="text-box">
+    <div class="container">
+    <h1>Manage Assets</h1>
     <div class="search-container">
       <div>
-        <label for="DateTrans">Search Trans. Date:</label>
+        <label for="DateTrans">Search by Date:</label>
         <input type="date" id="DateTrans" style="width: 180px;" oninput="filterAssets()">
       </div>
       <div>
@@ -68,48 +66,29 @@
     </div>
 
     <table>
-      <thead>
-        <tr>
-          <th>ID Trans.</th>
-          <th>Date Trans.</th>
-          <th>Time Trans.</th>
-          <th>Buy / Sell</th>
-          <th>Asset ID</th>
-          <th>Category</th>
-          <th>Asset Name</th>
-          <th>Place</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Buyer/Seller</th>
-        </tr>
-      </thead>
-      <tbody id="tradeTableBody">
-        <!-- Trades will be dynamically added here -->
-      </tbody>
-    </table>
-  </div>
+        <thead>
+          <tr>
+            <th>ID Asset</th>
+            <th>Category</th>
+            <th>Name</th>
+            <th>Place</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Quantity</th>
+            <th>Price($)</th>
+            <th>Email Seller</th>
+            <th>Delete</th>
+
+          </tr>
+        </thead>
+        <tbody id="assetTableBody">
+          <!-- Assets will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
 </div>
 
             <!-- end left form -->
-
-            <!-- start right form -->
-
-            <div class="container right">
-                <h1>Menu</h1>
-                <div class="ProfilePic" id="ProfilePic">
-                    <img src="images/adir.jpg" alt="ProfilePic">
-                </div>
-                <form style="margin-top: 120px;">
-                    <br><br><br><br><h2>Hi, Adir</h2>
-                    <a href="AddProduct.html" class="menu-button">Add New Digital Asset</a>
-                    <a class="choosed-button">Buy & Sell History</a>
-                    <a href="Edit.html" class="menu-button">Edit Details</a>
-                </form>
-            </div>
-
-      <!-- end right form -->
 
       <script> /* slide bar */
         const priceSlider = document.getElementById("price");
@@ -152,61 +131,50 @@
 
 <script>
 
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-   // ----------------------  SHOW ASSETS -----------------------
+fetchAssets();   // Fetch assets when the page loads
 
-   function checkAssetInfo(trade) {
-  if (Array.isArray(trade.asset_info) && trade.asset_info.length > 0) {
-    console.log("YES asset_info");
-    return trade.asset_info[0];
-  } else {
-    console.log("NO asset_info");
-    return {};
-  }
-}
+ // ----------------------  SHOW ASSETS -----------------------
 
-async function renderAssets() {
-  const userEmail = sessionStorage.getItem('Email');
+async function fetchAssets() {
   try {
-    const response = await fetch(`/user-trades?Email=${userEmail}`);
-    const userTrades = await response.json();
-    console.log('User trades:', userTrades); // Add this line to check the received data
-
-    const tradeTableBody = document.getElementById('tradeTableBody');
-    tradeTableBody.innerHTML = ''; // Clear existing rows
-
-    userTrades.forEach((trade) => {
-      console.log('Trade:', trade); // Add this line to check each trade object
-
-      const asset = checkAssetInfo(trade); // Check asset info
-      console.log('Asset:', asset); // Add this line to check the asset info
-
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td>${trade._id}</td>
-        <td>${formatDate(trade.TransDate)}</td>
-        <td>${trade.TransTime}</td>
-        <td>${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
-        <td>${trade.AssetID}</td>
-        <td>${asset.Category || ''}</td>
-        <td>${asset.NameDigitalAsset || ''}</td>
-        <td>${asset.Place || ''}</td>
-        <td>${formatDate(asset.Date) || ''}</td>
-        <td>${asset.Time || ''}</td>
-        <td>${asset.Quantity || ''}</td>
-        <td>${asset.Price || ''}</td>
-        <td>${trade.BuyerEmail === userEmail ? trade.SellerEmail : trade.BuyerEmail}</td>
-      `;
-      tradeTableBody.appendChild(row);
-    });
+    const response = await fetch('/assets/available');
+    if (!response.ok) {
+      throw new Error('Failed to fetch assets');
+    }
+    const assets = await response.json();
+    renderAssets(assets);
+    console.log('Assets:', assets);
   } catch (error) {
-    console.error('Error fetching user trades:', error);
+    console.error('Error fetching assets:', error);
   }
 }
 
-// Call the renderAssets function when the page is loaded
-window.onload = renderAssets;
+function renderAssets(assets) {
+  const assetTableBody = document.getElementById('assetTableBody');
+  assetTableBody.innerHTML = ''; // Clear existing rows
+  assets.forEach((asset) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${asset._id}</td>
+      <td>${asset.Category}</td>
+      <td>${asset.NameDigitalAsset}</td>
+      <td>${asset.Place}</td>
+      <td>${formatDate(asset.Date)}</td>
+      <td>${formatTime(asset.Time)}</td>
+      <td>${asset.Quantity}</td>
+      <td>${asset.Price}</td>
+      <td>${asset.Email}</td>
+      <td>
+      <button class="delete-button" onclick="delete(event, '${asset._id}', '${Email}')">Delete</button>
+      </td>
+    `;
+
+    assetTableBody.appendChild(row);
+  });
+}
+
 
    // ----------------------  FILTERS & SORTS -----------------------
 
@@ -220,10 +188,10 @@ window.onload = renderAssets;
     const assets = Array.from(document.getElementById('tradeTableBody').getElementsByTagName('tr'));
 
     assets.forEach((asset) => {
-      const DateTrans = asset.children[1].innerText;
-      const AssetName = asset.children[6].innerText;
-      const Category = asset.children[5].innerText;
-      const price = parseFloat(asset.children[11].innerText);
+      const DateTrans = asset.children[4].innerText;
+      const AssetName = asset.children[2].innerText;
+      const Category = asset.children[1].innerText;
+      const price = parseFloat(asset.children[7].innerText);
 
       asset.style.display = '';
 
@@ -251,8 +219,8 @@ window.onload = renderAssets;
     const assets = Array.from(tradeTableBody.getElementsByTagName('tr'));
 
     assets.sort((a, b) => {
-        const priceA = parseFloat(a.children[11].innerText);
-        const priceB = parseFloat(b.children[11].innerText);
+        const priceA = parseFloat(a.children[7].innerText);
+        const priceB = parseFloat(b.children[7].innerText);
         return ascendingOrder ? priceA - priceB : priceB - priceA;
     });
 

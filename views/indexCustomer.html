@@ -21,10 +21,10 @@
         <a href="Contact.html">Contact Us</a>
         <a href="About.html">About Us</a>
         <a href="/Asset">Add Asset</a>
-        <a href="History.html">Cart</a>
+        <a href="History.html">History</a>
         <div class="profile-info">
             <div class="profile-name">
-                <a href="Profile.html" style="text-decoration: none;" id="welcome-message">Welcome, <span id="customer-name"></span></a>
+              <a href="Profile.html" style="text-decoration: none;" id="welcome-message">Welcome, <span id="customer-name"></span></a>
             </div>
         </div>   
         <div class="profile-pic">
@@ -40,7 +40,7 @@
         <img src="images/BlueLogo.png" alt="" style="width: 70%;">
         <p class="under-text">The largest digital asset trading market in the world!</p>
         <p class="under-text">Here you can buy and sell digital assets <br> in many categories</p>
-        <h2>Join us to save your money</h2>
+        <h2>Scroll down and purchase digital assets !</h2>
         </p>
     </div>
     
@@ -170,22 +170,28 @@ window.addEventListener('DOMContentLoaded', function() {
 <!-------------------------------- DB ---------------------------------->
 
 <script>
-  // Retrieve the customer's first name from the URL query parameter
-  const urlParams = new URLSearchParams(window.location.search);
-  const Email = urlParams.get('Email');
+  // Define the getFirstName function
+  async function getFirstName(Email) {
+  try {
+    const response = await fetch(`/get-first-name?Email=${Email}`);
+    const data = await response.json();
+    document.getElementById('customer-name').textContent = data.FirstName; // Update the customer's name
+  } catch (error) {
+    console.error('Error fetching first name:', error);
+    document.getElementById('customer-name').textContent = 'Error fetching first name';
+  }
+}
 
-  // Update the HTML content with the customer's first name
-  const customerNameElement = document.getElementById('customer-name');
-  customerNameElement.textContent = Email;
-  
+// Retrieve the customer's first name from the URL query parameter
+const urlParams = new URLSearchParams(window.location.search);
+const Email = urlParams.get('Email');
+
+// Update the HTML content with the customer's first name
+window.addEventListener('DOMContentLoaded', () => {
+  getFirstName(Email); // Call the function after the DOM content has been loaded
   sessionStorage.setItem('Email', Email);
-
-// Split the email address to get the name part
-const emailParts = Email.split('@');
-const fname = emailParts[0]; // Assuming the name is before the "@" symbol
-
+});
 </script>
-
 
 <script>   
    
@@ -244,7 +250,11 @@ async function updateAssetAvailability(AssetID) {
     }
 
     if (confirm('Are you sure you want to buy?')) {
-      await createTransaction(AssetID, BuyerEmail, SellerEmail); // Create transaction
+      if (BuyerEmail === SellerEmail) { // Check if buyer's email equals seller's email
+    alert('Transaction canceled. You cant buy your asset.');
+  } else {
+    await createTransaction(AssetID, BuyerEmail, SellerEmail); // Create transaction
+  }
     } else {
       // User canceled the trade
       alert('Trade canceled.');

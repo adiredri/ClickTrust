@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles/index.css">
+<link rel="stylesheet" href="styles/indexCustomer.css">
 </head>
 <body>
 
@@ -23,71 +23,8 @@
         <a href="signup.html" style="text-decoration: underline;">Sign Up!</a>
         </div>
     </nav>
-    <!-- TradingView Widget BEGIN -->
-    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+   
 
-    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-    {
-    "symbols": [
-
-      {
-        "proName": "BITSTAMP:BTCUSD",
-        "title": "Bitcoin"
-      },
-      {
-        "proName": "BITSTAMP:ETHUSD",
-        "title": "Ethereum"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:BNBUSD"
-      },
-      {
-        "description": "",
-        "proName": "BITSTAMP:XRPUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:DOGEUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:ADAUSD"
-      },
-      {
-        "description": "",
-        "proName": "COINBASE:SHIBUSD"
-      },
-      {
-        "description": "",
-        "proName": "BITRUE:AVAXUSDC"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:SOLUSD"
-      },
-      {
-        "description": "",
-        "proName": "SAXO:LTCUSD"
-      },
-      {
-        "description": "",
-        "proName": "BINANCE:SANDUSD"
-      },
-      {
-        "description": "",
-        "proName": "OKX:MATICUSDC"
-      }
-    ],
-    "showSymbolLogo": true,
-    "colorTheme": "dark",
-    "isTransparent": true,
-    "displayMode": "compact",
-    "locale": "en"
-  }
-    </script>
-  </div>
-  <!-- TradingView Widget END -->
     <div class="text-box">
     <p>
         <p class="title">Weclome To Click Trust</p>
@@ -98,28 +35,37 @@
         </p>
     </div>
     
-<!-- Search -->
+<!------------------------- Search ------------------------>
 
 <div class="text-box" style="height: 700px;">
   <h1 style="font-size: 40px;">Search Digital Asset</h1><br>
   <div class="search-container" style="margin-left: 50px;">
     <div>
       <label for="DateTrans">Search by Date:</label>
-      <input type="date" id="DateTrans" style="width: 180px;">
+      <input type="date" id="DateTrans" style="width: 180px;" oninput="filterAssets()">
     </div>
     <div>
       <label for="Name">Search by Name</label>
-      <input type="text" id="Name">
+      <input type="text" id="Name" oninput="filterAssets()">
     </div>
     <div>
       <label for="Category">Search by Category</label>
-      <input type="text" id="Category">
+      <input type="text" id="Category" oninput="filterAssets()">
     </div>
     <div class="price-slider" style="margin-right: 50px;">
       <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
-      <input type="range" id="price" name="price" min="0" max="5000" value="200">
+      <input type="range" id="price" name="price" min="0" max="5000" value="200" onclick="filterAssets()">
   </div>
-  </div>
+  <div style="display: flex; align-items: center; margin-right: 30px;">
+    <label for="Sort" style="margin-right: 10px;">Sort Price</label>
+      <button id="sortPriceButton" onclick="sortAssetsByPriceDescending()" style="background: none; border: none; padding: 0;">
+            <img src="images/sort.png" alt="Sort by Price" width="30" height="30">
+        </button>
+    </div>
+    <div style="display: flex; align-items: center; margin-right: 30px;">
+      <button id="clearFiltersButton" onclick="clearFilters()">Clear Filters</button>
+    </div>
+</div>
 
   <table>
     <thead>
@@ -128,28 +74,30 @@
         <th>Category</th>
         <th>Name</th>
         <th>Place</th>
-        <th>Price</th>
         <th>Date</th>
         <th>Time</th>
-        <th>More Details</th>
+        <th>Quantity</th>
+        <th>Price($)</th>
+        <th>Purchase</th>
       </tr>
     </thead>
-    <tbody id="tradeTableBody">
-      <!-- Trades will be dynamically added here -->
+    <tbody id="assetTableBody">
+      <!-- Assets will be dynamically added here -->
     </tbody>
   </table>
 </div>
 
 
+
 <!--------------------- Footer ------------------------>
 
-    <footer>
-        <div class="social">
+<footer>
+  <div class="social"  style="bottom: 0;">
         <div class="social-media">
             <div class="social-buttons-frame">
                 <p>Come and say hello:</p>
             <a href="https://www.facebook.com" target="_blank"><img src="images/facebook.png" alt=""></a>
-            <a href="https://twitter.com/KanoniCoin" target="_blank"><img src="images/twitter.png" alt=""></a>
+            <a href="https://twitter.com" target="_blank"><img src="images/twitter.png" alt=""></a>
             </div>
           </div>
     </div>
@@ -171,7 +119,7 @@
             </div>
         </div>
       </footer>
-      
+  
 <script>
 
 /*   background video  */
@@ -209,5 +157,168 @@ window.addEventListener('DOMContentLoaded', function() {
   </script>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
 <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+
+<!-------------------------------- DB ---------------------------------->
+
+<script>
+  // Define the getFirstName function
+  async function getFirstName(Email) {
+  try {
+    const response = await fetch(`/get-first-name?Email=${Email}`);
+    const data = await response.json();
+    document.getElementById('customer-name').textContent = data.FirstName; // Update the customer's name
+  } catch (error) {
+    console.error('Error fetching first name:', error);
+    document.getElementById('customer-name').textContent = 'Error fetching first name';
+  }
+}
+
+// Retrieve the customer's first name from the URL query parameter
+const urlParams = new URLSearchParams(window.location.search);
+const Email = urlParams.get('Email');
+
+// Update the HTML content with the customer's first name
+window.addEventListener('DOMContentLoaded', () => {
+  getFirstName(Email); // Call the function after the DOM content has been loaded
+  sessionStorage.setItem('Email', Email);
+});
+</script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", function () {
+  
+  fetchAssets();   // Fetch assets when the page loads
+
+   // ----------------------  SHOW ASSETS -----------------------
+
+  async function fetchAssets() {
+    try {
+      const response = await fetch('/assets/available');
+      if (!response.ok) {
+        throw new Error('Failed to fetch assets');
+      }
+      const assets = await response.json();
+      renderAssets(assets);
+      console.log('Assets:', assets);
+    } catch (error) {
+      console.error('Error fetching assets:', error);
+    }
+  }
+
+  function renderAssets(assets) {
+    const assetTableBody = document.getElementById('assetTableBody');
+    assetTableBody.innerHTML = ''; // Clear existing rows
+    assets.forEach((asset) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${asset._id}</td>
+        <td>${asset.Category}</td>
+        <td>${asset.NameDigitalAsset}</td>
+        <td>${asset.Place}</td>
+        <td>${formatDate(asset.Date)}</td>
+        <td>${formatTime(asset.Time)}</td>
+        <td>${asset.Quantity}</td>
+        <td>${asset.Price}</td>
+        <td>
+        <button class="buy-button" onclick="alert('You need to log in to buy.');">Buy</button>
+        </td>
+      `;
+
+      assetTableBody.appendChild(row);
+    });
+  }
+
+   // ----------------------  FILTERS & SORTS -----------------------
+
+
+   async function filterAssets() {
+    const searchByDate = document.getElementById('DateTrans');
+    const searchByName = document.getElementById('Name');
+    const searchByCategory = document.getElementById('Category');
+    const maxPrice = document.getElementById('price');
+
+    const assets = Array.from(document.getElementById('assetTableBody').getElementsByTagName('tr'));
+
+    assets.forEach((asset) => {
+      const DateTrans = asset.children[4].innerText;
+      const AssetName = asset.children[2].innerText;
+      const Category = asset.children[1].innerText;
+      const price = parseFloat(asset.children[7].innerText);
+
+      asset.style.display = '';
+
+      if (searchByDate.value && !DateTrans.toLowerCase().includes(searchByDate.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (searchByName.value && !AssetName.toLowerCase().includes(searchByName.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (searchByCategory.value && !Category.toLowerCase().includes(searchByCategory.value.toLowerCase())) {
+        asset.style.display = 'none';
+      }
+
+      if (maxPrice.value && price > parseFloat(maxPrice.value)) {
+        asset.style.display = 'none';
+      }
+    });
+  }
+  let ascendingOrder = true;
+
+    function sortAssetsByPriceDescending() {
+    const assetTableBody = document.getElementById('assetTableBody');
+    const assets = Array.from(assetTableBody.getElementsByTagName('tr'));
+
+    assets.sort((a, b) => {
+        const priceA = parseFloat(a.children[7].innerText);
+        const priceB = parseFloat(b.children[7].innerText);
+        return ascendingOrder ? priceA - priceB : priceB - priceA;
+    });
+
+    assetTableBody.innerHTML = '';
+    assets.forEach(asset => {
+    assetTableBody.appendChild(asset);
+    });
+
+    ascendingOrder = !ascendingOrder;
+}
+function clearFilters() {  // Clear the sorts
+  document.getElementById('DateTrans').value = '';
+  document.getElementById('Name').value = '';
+  document.getElementById('Category').value = '';
+  document.getElementById('price').value = '';
+  filterAssets(); // קריאה לפונקציה לסינון
+}
+
+  // ---------- Event listeners ----------
+
+  document.getElementById('DateTrans').addEventListener('input', filterAssets);
+  document.getElementById('Name').addEventListener('input', filterAssets);
+  document.getElementById('Category').addEventListener('input', filterAssets);
+  document.getElementById('price').addEventListener('input', filterAssets);
+  document.getElementById('sortPriceButton').addEventListener('click', sortAssetsByPriceDescending);
+  document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
+
+  // ---------- FORMATS -----------
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    // Format the date as desired (e.g., YYYY-MM-DD)
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    return formattedDate;
+  }
+
+  function formatTime(timeString) {
+    // Implement time formatting if needed
+    return timeString;
+  }
+
+  // ----------------------------------------------------------------
+
+  });
+
+</script>
 </body>
 </html>

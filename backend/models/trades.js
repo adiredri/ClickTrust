@@ -11,7 +11,7 @@ const tradeSchema = new mongoose.Schema({
   },
   AssetID: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Asset',
+    ref: 'assets',
     required: true
   },
   SellerEmail: {

@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     if (loguser) {
 
       // Retrieve user's role based on email and ID
-      if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
+      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
         res.redirect('/admin?Email=' + loguser.Email);
       } else {
         // Redirect to the customer index page and pass the first name as a query parameter in the URL
@@ -88,6 +88,19 @@ router.post('/addAsset', async (req, res) => {
   });
 
   try {   
+    // Check if Quantity is less than 8
+    if (req.body.Quantity >= 8) {
+      throw new Error('Quantity must be less than 8.');
+    }
+    // Check if Price is less than 2500
+    if (req.body.Price >= 2500) {
+      throw new Error('Price must be less than 2500.');
+    }
+    // Check if Date is later than today
+    if (new Date(req.body.Date) >= new Date()) {
+      throw new Error('Date must be later than today.');
+    }
+
       // Save the Asset to the database
       await asset.save();
       console.log('Asset added successfully'); 
@@ -97,7 +110,7 @@ router.post('/addAsset', async (req, res) => {
     if (loguser) {
 
       // Retrieve user's role based on email and ID
-      if (loguser.id === '65f0dcf998ec2d9cd878bd39' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
+      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
         res.redirect('/admin?Email=' + loguser.Email);
       } else {
         // Redirect to the customer index page and pass the first name as a query parameter in the URL
@@ -165,6 +178,22 @@ router.get('/assets/:id/email', async (req, res) => {
   }
 });
 
+// get fname by email from asset
+
+router.get('/get-first-name', async (req, res) => {
+  const Email = req.query.Email;
+  try {
+    const user = await User.findOne({ Email });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ FirstName: user.FirstName });
+  } catch (error) {
+    console.error('Error:', error.message);
+    res.status(500).json({ error: 'Error fetching first name' });
+  }
+});
+
 // get all available assets
 router.get('/assets/available', async (req, res) => {
   try {
@@ -206,6 +235,8 @@ router.post('/addTrade', async (req, res) => {
   }
 });
 
+// --------- SHOW TRADES -----------
+
 router.get('/user-trades', async (req, res) => {
   const userEmail = req.query.Email; // get the email from the query parameters
   try {
@@ -237,6 +268,8 @@ router.get('/user-trades', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch user trades' });
   }
 });
+
+
 //  ----------------- Sends ------------------
 
 // Sends to customer home page
@@ -247,6 +280,11 @@ router.get('/customer', function (req, res) {
 // Sends to admin home page
 router.get('/admin', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'indexAdmin.html'));
+});
+
+// Sends to index login home page
+router.get('/index', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../views', 'index.html'));
 });
 
 // Sends to login page
