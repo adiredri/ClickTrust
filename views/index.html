@@ -161,17 +161,6 @@ window.addEventListener('DOMContentLoaded', function() {
 <!-------------------------------- DB ---------------------------------->
 
 <script>
-  // Define the getFirstName function
-  async function getFirstName(Email) {
-  try {
-    const response = await fetch(`/get-first-name?Email=${Email}`);
-    const data = await response.json();
-    document.getElementById('customer-name').textContent = data.FirstName; // Update the customer's name
-  } catch (error) {
-    console.error('Error fetching first name:', error);
-    document.getElementById('customer-name').textContent = 'Error fetching first name';
-  }
-}
 
 // Retrieve the customer's first name from the URL query parameter
 const urlParams = new URLSearchParams(window.location.search);
@@ -179,12 +168,12 @@ const Email = urlParams.get('Email');
 
 // Update the HTML content with the customer's first name
 window.addEventListener('DOMContentLoaded', () => {
-  getFirstName(Email); // Call the function after the DOM content has been loaded
-  sessionStorage.setItem('Email', Email);
+sessionStorage.setItem('Email', Email);
 });
 </script>
 
 <script>
+  
 
   document.addEventListener("DOMContentLoaded", function () {
   

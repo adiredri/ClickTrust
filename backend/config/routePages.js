@@ -112,6 +112,7 @@ router.post('/addAsset', async (req, res) => {
     Available: req.body.Available,
   });
   try {   
+    /*
     // Check if Quantity is less than 8
     if (req.body.Quantity >= 8) {
       throw new Error('Quantity must be less than 8.');
@@ -124,30 +125,17 @@ router.post('/addAsset', async (req, res) => {
     if (new Date(req.body.Date) >= new Date()) {
       throw new Error('Date must be later than today.');
     }  
-
+*/
     // Save the Asset to the database
     await asset.save();
     console.log('Asset added successfully'); 
+    res.status(200).json({ success: true }); // Sending a success response
 
-    if (loguser) {
-
-      // Retrieve user's role based on email and ID
-      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
-        res.redirect('/admin?Email=' + loguser.Email);
-      } else {
-        // Redirect to the customer index page and pass the first name as a query parameter in the URL
-        res.redirect('/customer?Email=' + loguser.Email);
-      }
-    } else {
-      // Display an alert for no such user
-      const errorMessage = 'No user found with the provided email and password.';
-      console.error(errorMessage);
-     // res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
-    }
-    
   } catch (error) {
     const errorMessage = 'An error occurred while adding the asset.';
     console.error(errorMessage);
+    console.error(error); // Log the error object
+
   }
 });
 
