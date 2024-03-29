@@ -144,8 +144,6 @@ nav {
      padding: 2px;
      height: 300px;
      width: 90%;
-     line-height: 0.5;  
-     text-align: center;
  }
 
 
@@ -335,6 +333,7 @@ input[type="range"]::-moz-range-thumb {
   border-collapse: collapse;
   width: 95%; /* רוחב הטבלה משתמש ב-90% מרוחב האב */
   border: 1px solid rgba(255, 255, 255, 0.1); /* קווים דקים סביב הטבלה */
+  margin: auto;
 }
 
 th, td {

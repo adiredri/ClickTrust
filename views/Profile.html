@@ -18,10 +18,11 @@
     </div>
     <nav>
         <div class="nav-bar">
-        <a href="Contact.html">Contact Us</a>
-        <a href="About.html">About Us</a>
-        <a href="LogIn.html">Cart</a>
-        <a href="SignUp.html">Log Out</a>
+            <a href="Contact.html">Contact Us</a>
+            <a href="About.html">About Us</a>
+            <a href="AddProduct.html">Add Asset</a>
+            <a href="History.html">History</a>
+            <a href="SignUp.html">Log Out</a>
         </div>
     </nav>
     <div class="logo">
@@ -59,18 +60,16 @@
 
         // Retrieve the email from session storage
          const Email = sessionStorage.getItem('Email');
-         var userId = document.getElementById(Email); // קבלת ה-ID לפי האימייל
       
-         // Determine the home page URL based on the user's role
-         let homePageUrl;
-         if (userId === '65f0dcf998ec2d9cd878bd39' || userId === '65f0e0ee98ec2d9cd878bd3b') 
-         {
-         homePageUrl = ('/admin?Email=' + Email);
-         } 
-         else 
-         {
-             homePageUrl = ('/customer?Email=' + Email);
-         }
+        // Determine the home page URL based on the user's role
+        let homePageUrl;
+        if (Email === null) { 
+          homePageUrl = '/index'; // Set home page URL to '/index' when email is null
+        } else if (Email === 'afik101297@gmail.com' || Email === 'afik1012971@gmail.com') {
+          homePageUrl = '/admin?Email=' + Email;
+        } else {
+          homePageUrl = '/customer?Email=' + Email;
+        }
       
          // Set the href attribute of the home link
          const homeLink = document.getElementById('home-link');
