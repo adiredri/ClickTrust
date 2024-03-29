@@ -70,6 +70,31 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// ----------------- RESER PASSWORD --------------------------
+
+
+router.post('/reset-password', async (req, res) => {
+  const ID = req.body.ID;
+  const Email = req.body.Email;
+  const newPassword = req.body.newPassword;
+
+  try {
+    // check if the user exists 
+    const user = await User.findOne({ ID: ID, Email: Email });
+
+    if (!user) {
+      return alert('There is no user with this email or id.');
+    }
+
+    // update password
+    await User.updateOne({ ID: ID, Email: Email }, { Password: newPassword });
+    res.send('The password has been successfully updated.');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 //  ------------------ ASSETS ---------------------
 
 // --------- Adds asset to the DB -----------
@@ -86,7 +111,6 @@ router.post('/addAsset', async (req, res) => {
     Email: req.body.Email,
     Available: req.body.Available,
   });
-
   try {   
     // Check if Quantity is less than 8
     if (req.body.Quantity >= 8) {
@@ -99,14 +123,12 @@ router.post('/addAsset', async (req, res) => {
     // Check if Date is later than today
     if (new Date(req.body.Date) >= new Date()) {
       throw new Error('Date must be later than today.');
-    }
+    }  
 
-      // Save the Asset to the database
-      await asset.save();
-      console.log('Asset added successfully'); 
-      // Send a response back to the client-side to handle the confirmation
-      res.send(`<script>alert('Asset added successfully.'); window.location.href='/Asset'</script>`);
-    
+    // Save the Asset to the database
+    await asset.save();
+    console.log('Asset added successfully'); 
+
     if (loguser) {
 
       // Retrieve user's role based on email and ID
@@ -120,13 +142,13 @@ router.post('/addAsset', async (req, res) => {
       // Display an alert for no such user
       const errorMessage = 'No user found with the provided email and password.';
       console.error(errorMessage);
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
+     // res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`);
     }
     
   } catch (error) {
     const errorMessage = 'An error occurred while adding the asset.';
     console.error(errorMessage);
-    res.send(`<script>alert('${errorMessage}'); window.location.href='/Asset'</script>`); }
+  }
 });
 
 // Sends all the assets 
