@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManageContacts</title>
+    <link rel="stylesheet" href="styles/manage.css">
+</head>
+<body>
+
+    <!-- start video, navbar, logo, widget -->
+
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="images\Digital.mp4" type="video/mp4">
+        </video>
+    </div>
+    <nav>
+        <div class="nav-bar">
+        <a href="manageUsers.html">Manage Users</a>
+        <a href="manageAssets.html">Manage Asset</a>
+        <a href="History.html">History</a>
+        <a href="SignUp.html">Log Out</a>
+        </div>
+    </nav>
+    <div class="logo">
+        <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
+    </div>
+    <div id="widget">
+        <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+            <img src="images/homepage.png" alt="Image" id="widget-image"></a>
+    </div>
+
+        <!-- end video, navbar, logo, widget -->
+
+<div class="text-box">
+    <div class="container">
+    <h1>Manage Contacts</h1>
+    <div class="search-container">
+      <div>
+        <label for="Name">Search by Name:</label>
+        <input type="text" id="Name" style="width: 200px;" oninput="filterContacts()">
+      </div>
+      <div>
+        <label for="Email">Search by Email</label>
+        <input type="text" id="Email" style="width: 200px;" oninput="filterContacts()">
+      </div>
+      <div>
+        <label for="Phone">Search by Phone</label>
+        <input type="number" id="Phone" style="width: 200px;" oninput="filterContacts()">
+      </div>
+      <div style="display: flex; align-items: center; margin-right: 30px;">
+        <button id="clearFiltersButton" onclick="clearFilters()">Clear Filters</button>
+    </div>
+    </div>
+
+    <table>
+        <thead>
+          <tr>
+            <th>ID Massege</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Massege</th>
+            <th>Delete</th>
+          </tr>
+        </thead>
+        <tbody id="contactTableBody">
+          <!-- contacts will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+<div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
+
+<script> // home page customer / admin
+
+    // Retrieve the email from session storage
+     const Email = sessionStorage.getItem('Email');
+
+     console.log(Email);
+
+    // Determine the home page URL based on the contact's role
+    let homePageUrl;
+    if (Email === null) { 
+      homePageUrl = '/index'; // Set home page URL to '/index' when email is null
+    } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
+      homePageUrl = '/admin?Email=' + Email;
+    } else {
+      homePageUrl = '/customer?Email=' + Email;
+    }
+  
+     // Set the href attribute of the home link
+     const homeLink = document.getElementById('home-link');
+     homeLink.setAttribute('href', homePageUrl);
+  </script>
+
+
+
+<script>
+    async function DeleteContcat(event, ContactID) {
+      try {
+        event.preventDefault(); // Prevent default button action (e.g., form submission)
+        if (confirm('Are you sure you want to delete this massege?')) {
+          const response = await fetch(`/DeleteContact/${ContactID}`, {
+            method: 'DELETE'
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to delete contact.');
+          }
+          
+          alert('contact deleted successfully');
+          location.reload(); // Refresh the page
+        } else {
+          alert('Delete canceled.');
+        }
+      } catch (error) {
+        console.error('Error deleting contact:', error);
+        console.log(error);
+      }
+    }
+</script>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    fetchContacts();   // Fetch contacts when the page loads
+
+ // ----------------------  SHOW CONTACTS -----------------------
+
+async function fetchContacts() {
+  try {
+    const response = await fetch('/contacts');
+    if (!response.ok) {
+      throw new Error('Failed to fetch contacts');
+    }
+    const contacts = await response.json();
+    renderContacts(contacts);
+    console.log('Contacts:', contacts);
+  } catch (error) {
+    console.error('Error fetching contacts:', error);
+  }
+}
+
+function renderContacts(contacts) {
+  const contactTableBody = document.getElementById('contactTableBody');
+  contactTableBody.innerHTML = ''; // Clear existing rows
+  contacts.forEach((contact) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${contact._id}</td>
+      <td>${contact.Name}</td>
+      <td>${contact.Email}</td>     
+      <td>${contact.Phone}</td>
+      <td>${contact.Massege}</td>
+      <td>
+      <button class="delete-button" onclick="DeleteContcat(event, '${user._id}')">Delete</button>
+      </td>
+    `;
+
+    contactTableBody.appendChild(row);
+  });
+}
+
+
+   // ----------------------  FILTERS & SORTS -----------------------
+
+
+   async function filterContacts() {
+    const searchByName = document.getElementById('Name');
+    const searchByEmail = document.getElementById('Email');
+    const searchByPhone = document.getElementById('Phone');
+
+    const contacts = Array.from(document.getElementById('contactTableBody').getElementsByTagName('tr'));
+
+    contacts.forEach((contact) => {
+      const Name = contact.children[1].innerText;
+      const Email = contact.children[2].innerText;
+      const Phone = contact.children[3].innerText;
+
+      contact.style.display = '';
+
+      if (searchByName.value && !Name.toLowerCase().includes(searchByName.value.toLowerCase())) {
+        contact.style.display = 'none';
+      }
+
+      if (searchByEmail.value && !Email.toLowerCase().includes(searchByEmail.value.toLowerCase())) {
+        contact.style.display = 'none';
+      }
+
+      if (searchByPhone.value && !Phone.toLowerCase().includes(searchByPhone.value.toLowerCase())) {
+        contact.style.display = 'none';
+      }
+
+    });
+  }
+
+    let ascendingOrder = true;
+    contactTableBody.innerHTML = '';
+    contacts.forEach(contact => {
+    contactTableBody.appendChild(contact);
+    });
+
+    ascendingOrder = !ascendingOrder;
+
+function clearFilters() {  // Clear the sorts
+  document.getElementById('Name').value = '';
+  document.getElementById('Email').value = '';
+  document.getElementById('Phone').value = '';
+  filterContacts(); // קריאה לפונקציה לסינון
+}
+
+  // --------------------------- Event listeners ----------------------
+
+  document.getElementById('Name').addEventListener('input', filterContacts);
+  document.getElementById('Email').addEventListener('input', filterContacts);
+  document.getElementById('Phone').addEventListener('input', filterContacts);
+  document.getElementById('clearFiltersButton').addEventListener('click', clearFilters);
+
+  // ----------------------------------------------------------------
+
+  });
+
+</script>
+</body>
+</html>

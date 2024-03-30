@@ -120,49 +120,32 @@ nav {
 }
 
 /*  ------------  text boxes ------------- */
- .container{
-     display: flex;
-     flex-direction: column;
-     align-items: center;
-     justify-content: center;
-     background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
-     backdrop-filter: blur(60px); 
-     -webkit-backdrop-filter: blur(60px);
-     border-radius: 20px;
-     border:1px solid rgba(255, 255, 255, 0.05);
-     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-     width: 600px;
-     height: 520px;
-     margin-top: 140px;
+.container{
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: fixed;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.15));
+  backdrop-filter: blur(60px); 
+  -webkit-backdrop-filter: blur(60px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  width: 90%;
+  height: 70%;
+  bottom: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 13px; 
+
  }
  
  .container form{
      padding: 2px;
-     height: 300px;
+     height: 40%;
      width: 90%;
-     line-height: 0.5;  
-     text-align: center;
  }
-
- .left {
-    
-    margin-left: 20px;
-    text-align: center;
-    align-items: center;
-    float: left;
-    clear: left;
-    width: 1100px;
-    margin-bottom: -20px;
-
-}
-
-.right {
-    
-    margin-right: 20px;
-    float: right;
-    clear: right;
-    width: 300px;
-}
 
 .container input{
     

@@ -35,11 +35,9 @@
 
         <!-- end video, navbar, logo, widget -->
 
-        <!-- start left form -->
-
 <div class="text-box" style="height: 700px;">
-  <div class="container left">
-    <h1 style="margin-top: -250px;">Transaction History</h1>
+  <div class="container">
+    <h1>Transaction History</h1>
     <div class="search-container">
       <div>
         <label for="DateTrans">Search Trans. Date:</label>
@@ -47,11 +45,11 @@
       </div>
       <div>
         <label for="Name">Search by Name</label>
-        <input type="text" id="Name" oninput="filterAssets()">
+        <input type="text" id="Name" style="width: 220px;" oninput="filterAssets()">
       </div>
       <div>
         <label for="Category">Search by Category</label>
-        <input type="text" id="Category" oninput="filterAssets()">
+        <input type="text" id="Category" style="width: 220px;" oninput="filterAssets()">
       </div>
       <div class="price-slider">
         <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
@@ -93,25 +91,6 @@
   </div>
 </div>
 
-            <!-- end left form -->
-
-            <!-- start right form -->
-
-            <div class="container right">
-                <h1>Menu</h1>
-                <div class="ProfilePic" id="ProfilePic">
-                    <img src="images/adir.jpg" alt="ProfilePic">
-                </div>
-                <form style="margin-top: 120px;">
-                    <br><br><br><br><h2>Hi, Adir</h2>
-                    <a href="AddProduct.html" class="menu-button">Add New Digital Asset</a>
-                    <a class="choosed-button">Buy & Sell History</a>
-                    <a href="Edit.html" class="menu-button">Edit Details</a>
-                </form>
-            </div>
-
-      <!-- end right form -->
-
       <script> /* slide bar */
         const priceSlider = document.getElementById("price");
         const priceValue = document.getElementById("price-value");
@@ -133,7 +112,7 @@
   let homePageUrl;
   if (Email === null) { 
     homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-  } else if (Email === 'afik101297@gmail.com' || Email === 'afik1012971@gmail.com') {
+  } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
     homePageUrl = '/admin?Email=' + Email;
   } else {
     homePageUrl = '/customer?Email=' + Email;

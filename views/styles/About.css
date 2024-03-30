@@ -1,6 +1,7 @@
 body {
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .logo {
@@ -77,19 +78,18 @@ body {
 }
 
 .text-box {
+  transform: translateX(-50%);
   position: fixed;
-  top: 8%;
-  left: calc(20%); /* מרכז החלק התחתון */
-  width: 58%; /* רוחב של החלק האמצעי */
+  top: 25%;
+  left: 50%;
+  max-width: 70%;
+  max-height: 40%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: rgb(24, 29, 71); /* צבע הטקסט */
   text-align: center;
-  margin-top: 100px;
-  max-width: 1350px;
-  padding-left: 20px; /* זיזת הטקסט קצת ימינה */
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
   backdrop-filter: blur(40px);  /*blur effect*/
   -webkit-backdrop-filter: blur(40px); /*blur effect*/
@@ -111,12 +111,19 @@ body {
   text-align: center; /* מרכוז טקסט באופן אופקי */
 }
 
+#manager1, #manager2 {
+  position: absolute;
+  bottom: 20%; /* רצוי לשנות את הערך על מנת להתאים את המרחק לפי התמונה */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 #manager1 {
-  left: calc(50% - 250px); /* מוניטית שמאלית מהמרכז */
+  left: calc(37% - 50px); /* מרכוז התמונה */
 }
 
 #manager2 {
-  left: calc(50% + 50px); /* מוניטית ימנית מהמרכז */
+  left: calc(63% - 50px); /* מרכוז התמונה */
 }
 
 .manager img {
@@ -128,28 +135,24 @@ body {
   margin-top: -40px; /* מרווח מעל לטקסט */
   color: rgb(0, 0, 0); /* צבע טקסט לבן */
 }
-.title1{
-  position: fixed; /* הגדרת המיקום לקבוע על המסך */
-  bottom: 40px; /* הגדרת המרחק מהתחתון של המסך */
-  left: 50%; /* הגדרת מיקום אופקי לאמצע המסך */
-  transform: translateX(-145%); /* הזזת האלמנט למרכז המסך */
-  color: rgb(38, 32, 90); /* צבע הטקסט */
-  padding: 10px 20px; /* ריווחים פנימיים */
+.title1, .title2 {
+  position: absolute;
+  transform: translateX(-50%);
+  color: rgb(38, 32, 90);
+  padding: 10px 20px;
   font-family: "Arial", "sans-serif";
-  font-size: 16px; /* גודל גופן רגיל */
+  font-size: 16px;
   font-weight: bold;
+  text-align: center; 
+  bottom: 6%;
 }
 
-.title2{
-  position: fixed; /* הגדרת המיקום לקבוע על המסך */
-  bottom: 40px; /* הגדרת המרחק מהתחתון של המסך */
-  left: 50%; /* הגדרת מיקום אופקי לאמצע המסך */
-  transform: translateX(45%); /* הזזת האלמנט למרכז המסך */
-  color: #1e1852;
-  padding: 10px 20px; /* ריווחים פנימיים */
-  font-family: "Arial", "sans-serif";
-  font-size: 16px; /* גודל גופן רגיל */
-  font-weight: bold;
+.title1 {
+  left: 34%;
+}
+
+.title2 {
+  left: 60%;
 }
 
 .linkedin-section {

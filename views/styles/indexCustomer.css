@@ -116,8 +116,8 @@
    align-items: center;
    color: white;
    text-align: center;
-   width: 90%;
-   max-width: 1150px;
+   width: 95%;
+   max-width: 90%;
    margin-top: 170px;
    margin-bottom:160px;
    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
@@ -166,7 +166,7 @@
   text-align: center;
   width: 600px;
   height: 520px;
-  width: 30%;
+  width: 40%;
   margin-top: 140px;
 }
 
@@ -184,7 +184,7 @@
   color: rgba(255, 255, 255, 0.9);
   font-size: 18px;
   height: 25px;
-  width: 85%;
+  width: 90%;
   padding-top: 4px;
   margin-top: 5px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));

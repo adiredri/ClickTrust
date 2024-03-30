@@ -17,18 +17,18 @@
         <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
     </div>
     <div id="widget">
-        <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+        <a id="home-link" href="#"> 
             <img src="images/homepage.png" alt="Image" id="widget-image"></a>
     </div>
     <div class="wrapper">
-    <div class="container" style="width: 600px;">
+    <div class="container" style="width: 40%">
         <h2>Contcat Us!</h2>
-        <form>
+        <form id="contactForm" method="POST">
             <input type="text" name="Name" placeholder="Name" style="width: 55%" required><br><br>
             <input type="text" name="Email" placeholder="Email" style="width: 55%" required><br><br>
             <input type="number" name="Phone" placeholder="Phone" style="width: 55%" required><br><br><br>
-            <textarea id="message" name="Message" placeholder="Message" style="width: 95%" required></textarea>
-            <input type="submit" value="Submit" id="signup-button" style="margin-top: 15px;">
+            <textarea id="message" name="Massege" placeholder="Massege" style="width: 95%" required></textarea>
+            <input type="submit" value="Submit" id="signup-button" style="margin-top: 15px;" onclick="addContact(event)">
         </form>
         <p>Address: Havanim Street 1, Ashdod <br><br>
            Email: info@ClickTrust.com <br><br>        
@@ -47,7 +47,7 @@
     let homePageUrl;
     if (Email === null) { 
       homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-    } else if (Email === 'afik101297@gmail.com' || Email === 'afik1012971@gmail.com') {
+    } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
       homePageUrl = '/admin?Email=' + Email;
     } else {
       homePageUrl = '/customer?Email=' + Email;
@@ -57,6 +57,62 @@
      const homeLink = document.getElementById('home-link');
      homeLink.setAttribute('href', homePageUrl);
   </script>
-  
+
+
+
+
+<script>
+
+    async function addContact(event) {
+      try {
+        event.preventDefault(); // Prevent default button action (e.g., form submission)
+    
+        if (confirm('Are you sure you want to send this massege?')) {
+          await createContact(); // Create massege
+        } else {
+          // User canceled the action
+          alert('Send Massege canceled.');
+        }
+      } catch (error) {
+        console.error('Error adding massege:', error);
+      }
+    }
+    
+    
+    async function createContact() {
+      try {
+        const formData = new FormData(document.getElementById('contactForm'));
+        
+        const data = {};
+        formData.forEach((value, key) => {
+          data[key] = value;
+        });
+        
+        const response = await fetch('/addContact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data)
+        });
+    
+        if (!response.ok) {
+          const errorMessage = await response.text();
+          throw new Error(`Failed to create contact: ${errorMessage}`);
+        }
+    
+        console.log('Massege send successfully');
+        alert('Massege send successfully');
+        location.reload(); 
+    
+      } catch (error) {
+        console.error('Error creating massege:', error);
+        console.log(error);
+      }
+    }
+    
+</script>
+
+
 </body>
 </html>

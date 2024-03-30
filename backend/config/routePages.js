@@ -4,10 +4,13 @@ const path = require('path');
 const User = require('../models/user');
 const Asset = require('../models/asset');
 const Trade = require('../models/trades');
+const Contact = require('../models/contact');
 
-//  ----------------- SIGNUP --------------------
 
-// Adding user to the DB
+//  --------------------------------- SIGNUP -------------------------------------------
+
+// --------------- Adding user to the DB ------------------
+
 router.post('/addUser', async (req, res) => {
   const user = new User({
     ID: req.body.ID,
@@ -20,7 +23,7 @@ router.post('/addUser', async (req, res) => {
     Gender: req.body.Gender,
   });
   try {
-    // Save the user to the database
+    //  Save the user to the database 
     await user.save();
     console.log('User added successfully');
     res.redirect('/Welcome');
@@ -39,6 +42,33 @@ router.post('/addUser', async (req, res) => {
   }
 });
 
+// ------------- get all users --------------
+
+router.get('/users', async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.json(users);
+  } catch (error) {
+    console.error('Error fetching available users:', error);
+    res.status(500).json({ error: 'Failed to fetch available users' });
+  }
+});
+
+   // --------------- Delete user from DB ---------------
+   
+router.delete('/DeleteUser/:UserID', async (req, res) => {
+  try {
+    const ID = req.params.ID;
+    await User.findByIdAndDelete(ID);
+    res.status(200).send('User deleted successfully');
+    console.log('User deleted successfully');
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    res.status(500).send('Failed to delete user');
+  }
+});
+
+
 //  ----------------- LOGIN --------------------
 
 // Connects users to the site by classification 
@@ -52,7 +82,7 @@ router.post('/login', async (req, res) => {
     if (loguser) {
 
       // Retrieve user's role based on email and ID
-      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f0e0ee98ec2d9cd878bd3b') {
+      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f5c45d1ade009485b849df') {
         res.redirect('/admin?Email=' + loguser.Email);
       } else {
         // Redirect to the customer index page and pass the first name as a query parameter in the URL
@@ -70,7 +100,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// ----------------- RESER PASSWORD --------------------------
+// --------- RESET PASSWORD ----------
 
 
 router.post('/reset-password', async (req, res) => {
@@ -95,7 +125,7 @@ router.post('/reset-password', async (req, res) => {
   }
 });
 
-//  ------------------ ASSETS ---------------------
+//  ------------------------------------------ ASSETS -----------------------------------------------
 
 // --------- Adds asset to the DB -----------
 
@@ -139,7 +169,8 @@ router.post('/addAsset', async (req, res) => {
   }
 });
 
-// Sends all the assets 
+// -------- Sends all the assets ------------
+
 router.get('/assets', async (req, res) => {
   try {
     // Retrieve all assets from the database
@@ -153,7 +184,8 @@ router.get('/assets', async (req, res) => {
   }
 });
 
-// Updates asset available = false in the DB when it sold.
+// ----------------- Updates asset available = false in the DB when it sold. ------------
+
 router.patch('/assets/:id', async (req, res) => {
   const AssetId = req.params.id;
   try {
@@ -174,7 +206,8 @@ router.patch('/assets/:id', async (req, res) => {
   }
 });
 
-// get email seller from asset
+// ------------- get email seller from asset --------------
+
 router.get('/assets/:id/email', async (req, res) => {
   try {
     const asset = await Asset.findById(req.params.id);
@@ -188,7 +221,7 @@ router.get('/assets/:id/email', async (req, res) => {
   }
 });
 
-// get fname by email from asset
+// --------------- get fname by email from asset ---------------------
 
 router.get('/get-first-name', async (req, res) => {
   const Email = req.query.Email;
@@ -204,7 +237,8 @@ router.get('/get-first-name', async (req, res) => {
   }
 });
 
-// get all available assets
+// --------------- get all available assets --------------------
+
 router.get('/assets/available', async (req, res) => {
   try {
     const assets = await Asset.find({ Available: true });
@@ -218,8 +252,22 @@ router.get('/assets/available', async (req, res) => {
   }
 });
 
+  // ----------------- Delete Asset ------------------
 
-//  ------------------ TRADES ---------------------
+router.delete('/DeleteAsset/:AssetID', async (req, res) => {
+  try {
+    const AssetID = req.params.AssetID;
+    await Asset.findByIdAndDelete(AssetID);
+    res.status(200).send('Asset deleted successfully');
+    console.log('Asset deleted successfully');
+  } catch (error) {
+    console.error('Error deleting asset:', error);
+    res.status(500).send('Failed to delete asset');
+  }
+});
+
+
+//  ---------------------------------------------- TRADES ----------------------------------------------------
 
 // ----------- Adds trade to DB ------------
 
@@ -280,7 +328,60 @@ router.get('/user-trades', async (req, res) => {
 });
 
 
-//  ----------------- Sends ------------------
+//  ----------------------------------------------- CONTACTS -------------------------------------------
+
+// ------------- Add new massege --------------
+
+router.post('/addContact', async (req, res) => {
+  const contact = new Contact({
+    Name: req.body.Name,
+    Email: req.body.Email,
+    Phone : req.body.Phone,
+    Massege: req.body.Massege,
+  });
+
+  try {   
+      // Save the Contact to the database
+      await contact.save();
+      console.log('Contact added successfully'); 
+      // Send a response back to the client-side to handle the confirmation
+      res.status(200).json({ success: true }); // Sending a success response
+
+  } catch (error) {
+    console.error('An error occurred while adding the contact:', error);
+    res.status(500).json({ success: false, error: 'An error occurred while adding the contact' }); // Sending an error response
+  }
+});
+
+// ------------- get all masseges --------------
+
+router.get('/contacts', async (req, res) => {
+  try {
+    const contacts = await Contact.find({});
+    res.json(contacts);
+  } catch (error) {
+    console.error('Error fetching available contacts:', error);
+    res.status(500).json({ error: 'Failed to fetch available contacts' });
+  }
+});
+
+   // --------------- Delete massege from DB ---------------
+   
+router.delete('/DeleteContact/:ContactID', async (req, res) => {
+  try {
+    const ID = req.params.ID;
+    await Contact.findByIdAndDelete(ID);
+    res.status(200).send('Massege deleted successfully');
+    console.log('Massege deleted successfully');
+  } catch (error) {
+    console.error('Error deleting Massege:', error);
+    res.status(500).send('Failed to delete Massege');
+  }
+});
+
+
+
+//  ----------------------------------------------- SENDS -------------------------------------------
 
 // Sends to customer home page
 router.get('/customer', function (req, res) {
