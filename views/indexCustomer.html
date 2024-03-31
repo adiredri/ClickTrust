@@ -20,7 +20,8 @@
         <div class="nav-bar">
         <a href="Contact.html">Contact Us</a>
         <a href="About.html">About Us</a>
-        <a href="/Asset">Add Asset</a>
+        <a href="AddProduct.html">Add Asset</a>
+        <a href="Edit.html">Edit Details</a>
         <a href="History.html">History</a>
         <div class="profile-info">
             <div class="profile-name">
@@ -28,7 +29,7 @@
             </div>
         </div>   
         <div class="profile-pic">
-            <img src="images/adir.JPG" alt="Profile">
+            <img src="images/avatar.jpg" alt="Profile">
         </div> 
     </div>
     </nav>
@@ -79,15 +80,15 @@
   <table>
     <thead>
       <tr>
-        <th>ID Asset</th>
+        <th style="width: 25%;">ID Asset</th>
         <th>Category</th>
         <th>Name</th>
         <th>Place</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Quantity</th>
-        <th>Price($)</th>
-        <th>Purchase</th>
+        <th style="width: 40%;">Date</th>
+        <th style="width: 25%;">Time</th>
+        <th style="width: 30%;">Quantity</th>
+        <th style="width: 25%;">Price($)</th>
+        <th style="width: 30%;">Purchase</th>
       </tr>
     </thead>
     <tbody id="assetTableBody">
@@ -161,7 +162,7 @@ window.addEventListener('DOMContentLoaded', function() {
   const priceValue = document.getElementById("price-value");
   
   priceSlider.addEventListener("input", function() {
-      priceValue.textContent = this.value / 2; // הצגת חצי הערך שנבחר
+      priceValue.textContent = this.value; // הצגת חצי הערך שנבחר
   });
   </script>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
@@ -331,17 +332,17 @@ async function createTransaction(AssetID, BuyerEmail, SellerEmail) {
     assets.forEach((asset) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${asset._id}</td>
-        <td>${asset.Category}</td>
-        <td>${asset.NameDigitalAsset}</td>
-        <td>${asset.Place}</td>
-        <td>${formatDate(asset.Date)}</td>
-        <td>${formatTime(asset.Time)}</td>
-        <td>${asset.Quantity}</td>
-        <td>${asset.Price}</td>
-        <td>
-        <button class="buy-button" onclick="addTrade(event, '${asset._id}', '${Email}')">Buy</button>
-        </td>
+       <td style="width: 25%;">${asset._id}</td>
+       <td>${asset.Category}</td>
+       <td>${asset.NameDigitalAsset}</td>
+       <td>${asset.Place}</td>
+       <td style="width: 40%;">${formatDate(asset.Date)}</td>
+       <td style="width: 25%;">${formatTime(asset.Time)}</td>
+       <td style="width: 30%;">${asset.Quantity}</td>
+       <td style="width: 25%;">${asset.Price}</td>
+       <td style="width: 30%;">
+       <button class="buy-button" onclick="addTrade(event, '${asset._id}', '${Email}')">Buy</button>
+       </td>
       `;
 
       assetTableBody.appendChild(row);

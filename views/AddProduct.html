@@ -37,24 +37,58 @@
 
         <!-- start left form -->
 
-    <div class="container left">
-        <form id="assetForm" method="POST" style="margin-top: -190px;">
-            <h2>Adding New Digital Asset</h2><br>
-            <input type="text" name="Category" placeholder="Category" required><br><br>
-            <input type="text" name="NameDigitalAsset" placeholder="Name Digital Asset" required><br><br>
-            <input type="text" name="Place" placeholder="Place" required><br><br>
-            <input type="date" name="Date" placeholder="Date" required><br><br>
-            <input type="time" name="Time" placeholder="Time" required><br><br>
-            <input type="number" name="Quantity" placeholder="Quantity" required><br><br>
-            <input type="number" name="Price" placeholder="Price ($)" required><br><br>
-            <input type="hidden" name="Email" id="Email" required>
-            <input type="hidden" name="Available" id="Available" value="true" required>
-            <input type="submit" value="Add Asset" id="add-button" onclick="addAsset(event)">
-        </form>
-        <div class="conformation" style="display: none;">
-            <p>Asset Added Successfully<br></p>
+        <div class="container left">
+            <form id="assetForm" method="POST" style="margin-top: -20%;">
+                <h2>Adding New Digital Asset</h2><br>
+                <select name="Category" required>
+                    <option value="" disabled selected style="color: rgba(255, 255, 255, 0.9);">Select Category</option>
+                    <option value="Shows">Shows</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Games">Games</option>
+                    <option value="Music">Music</option>
+                    <option value="Subscriptions">Subscriptions</option>
+                    <option value="Softwares">Softwares</option>
+                    <option value="CryptoCoins">Crypto Coins</option>
+                    <option value="DigitalArts">Digital Arts</option>
+                    <option value="DigitalBooks">Digital Books</option>
+                    <option value="MoviesSeries">Movies / Series</option>
+                    <option value="Other">Other</option>
+                </select><br><br>
+                <input type="text" name="NameDigitalAsset" placeholder="Name Digital Asset" required><br><br>
+                <input type="text" name="Place" placeholder="Place" required><br><br>
+                <div style="display: flex;">
+                    <div style="flex: 1; margin-right: 10px;">
+                        <input type="date" name="Date" placeholder="Date" style="width: 90%;" required>
+                    </div>
+                    <div style="flex: 1; margin-left: 10px;">
+                        <input type="time" name="Time" placeholder="Time" style="width: 90%;" required>
+                    </div>
+                </div>
+                <br>
+                <div style="display: flex; align-items: flex-end;">
+                    <div style="flex: 1; margin-right: 10px;">
+                        <select name="Quantity" required style="width: 90%; height: 35px;">
+                            <option value="" disabled selected style="color: rgba(255, 255, 255, 0.9);">Quantity</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1; margin-left: 10px;">
+                        <input type="number" name="Price" placeholder="Price ($)" style="width: 90%; height: 30px;" required>
+                    </div>
+                </div><br><br>
+                <input type="hidden" name="Email" id="Email" required>
+                <input type="hidden" name="Available" id="Available" value="true" required>
+                <input type="submit" value="Add Asset" id="add-button" onclick="addAsset(event)">
+            </form>
+            <div class="conformation" style="display: none;">
+                <p>Asset Added Successfully<br></p>
+            </div>
         </div>
-    </div>
 
             <!-- end right forms -->
 
@@ -63,7 +97,7 @@
             <div class="container right">
                 <h1>Menu</h1>
                 <div class="ProfilePic" id="ProfilePic">
-                    <img src="images/adir.jpg" alt="ProfilePic">
+                    <img src="images/avatar3.jpg" alt="ProfilePic">
                 </div>
                 <form id="assetFormRight" style="margin-top: 120px;">
                     <br><br><br><br><h2>Hi, Adir</h2>
@@ -121,7 +155,23 @@ async function addAsset(event) {
 async function createAsset() {
   try {
     const formData = new FormData(document.getElementById('assetForm'));
-    
+    const price = formData.get('Price');
+    const date = formData.get('Date');
+    const currentDate = new Date();
+    const selectedDate = new Date(date);
+
+    if (parseInt(price) > 5000) {
+      alert('Price cannot be greater than 5000.');
+      location.reload(); // העלאה מחדש של העמוד
+      return;
+    }
+
+    if (selectedDate < currentDate) {
+      alert('Date cannot be in the past.');
+      location.reload(); // העלאה מחדש של העמוד
+      return;
+    }
+
     const data = {};
     formData.forEach((value, key) => {
       data[key] = value;
@@ -152,9 +202,6 @@ async function createAsset() {
   }
 }
 
-
-
-  </script>
+</script>
   
-
 </html>

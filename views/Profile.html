@@ -41,10 +41,11 @@
          <div class="container right">
             <h1>Menu</h1>
             <div class="ProfilePic" id="ProfilePic">
-                <img src="images/adir.jpg" alt="ProfilePic">
+                <img src="images/avatar3.jpg" alt="ProfilePic">
             </div>
             <form>
-                <br><br><br><br><h2>Hi, Adir</h2>
+                <br><br><br><br>
+                <h2>Hi, <span id="customer-name"></span></h2>
                 <a href="AddProduct.html" class="menu-button">Add New Digital Asset</a>
                 <a href="History.html" class="menu-button">Buy & Sell History</a>
                 <a href="Edit.html" class="menu-button">Edit Details</a>
@@ -56,7 +57,28 @@
       <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
       <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
 
+
+
+
       <script> // home page customer / admin
+
+// Define the getFirstName function
+async function getFirstName(Email) {
+try {
+  const response = await fetch(`/get-first-name?Email=${Email}`);
+  const data = await response.json();
+  document.getElementById('customer-name').textContent = data.FirstName; // Update the customer's name
+} catch (error) {
+  console.error('Error fetching first name:', error);
+  document.getElementById('customer-name').textContent = 'Error fetching first name';
+}
+}
+
+// Update the HTML content with the customer's first name
+window.addEventListener('DOMContentLoaded', () => {
+  getFirstName(Email); // Call the function after the DOM content has been loaded
+  sessionStorage.setItem('Email', Email);
+});
 
         // Retrieve the email from session storage
          const Email = sessionStorage.getItem('Email');

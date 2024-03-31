@@ -69,19 +69,19 @@
     <table>
       <thead>
         <tr>
-          <th>ID Trans.</th>
-          <th>Date Trans.</th>
-          <th>Time Trans.</th>
-          <th>Buy / Sell</th>
-          <th>Asset ID</th>
+          <th style="width: 25%">ID Trans.</th>
+          <th style="width: 30%">Date Trans.</th>
+          <th style="width: 25%">Time Trans.</th>
+          <th style="width: 25%">Buy / Sell</th>
+          <th style="width: 25%">Asset ID</th>
           <th>Category</th>
           <th>Asset Name</th>
           <th>Place</th>
-          <th>Date</th>
-          <th>Time</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Buyer/Seller</th>
+          <th style="width: 30%">Date</th>
+          <th style="width: 25%">Time</th>
+          <th style="width: 30%">Quantity</th>
+          <th style="width: 30%">Price</th>
+          <th style="width: 50%">Buyer/Seller</th>
         </tr>
       </thead>
       <tbody id="tradeTableBody">
@@ -96,7 +96,7 @@
         const priceValue = document.getElementById("price-value");
         
         priceSlider.addEventListener("input", function() {
-            priceValue.textContent = this.value / 2; // הצגת חצי הערך שנבחר
+            priceValue.textContent = this.value ; // הצגת חצי הערך שנבחר
         });
         </script>
 
@@ -162,19 +162,19 @@ async function renderAssets() {
 
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td>${trade._id}</td>
-        <td>${formatDate(trade.TransDate)}</td>
-        <td>${trade.TransTime}</td>
-        <td>${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
-        <td>${trade.AssetID}</td>
+        <td style="width: 25%">${trade._id}</td>
+        <td style="width: 30%">${formatDate(trade.TransDate)}</td>
+        <td style="width: 25%">${trade.TransTime}</td>
+        <td style="width: 25%">${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
+        <td style="width: 25%">${trade.AssetID}</td>
         <td>${asset.Category || ''}</td>
         <td>${asset.NameDigitalAsset || ''}</td>
         <td>${asset.Place || ''}</td>
-        <td>${formatDate(asset.Date) || ''}</td>
-        <td>${asset.Time || ''}</td>
-        <td>${asset.Quantity || ''}</td>
-        <td>${asset.Price || ''}</td>
-        <td>${trade.BuyerEmail === userEmail ? trade.SellerEmail : trade.BuyerEmail}</td>
+        <td style="width: 30%">${formatDate(asset.Date) || ''}</td>
+        <td style="width: 25%">${asset.Time || ''}</td>
+        <td style="width: 30%">${asset.Quantity || ''}</td>
+        <td style="width: 30%">${asset.Price || ''}</td>
+        <td style="width: 50%">${trade.BuyerEmail === userEmail ? trade.SellerEmail : trade.BuyerEmail}</td>
       `;
       tradeTableBody.appendChild(row);
     });

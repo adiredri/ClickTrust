@@ -12,33 +12,90 @@ const Contact = require('../models/contact');
 // --------------- Adding user to the DB ------------------
 
 router.post('/addUser', async (req, res) => {
-  const user = new User({
-    ID: req.body.ID,
-    FirstName: req.body.FirstName,
-    LastName: req.body.LastName,
-    Email: req.body.Email,
-    Password: req.body.Password,
-    Phone: req.body.Phone,
-    Birthday: req.body.Birthday,
-    Gender: req.body.Gender,
-  });
   try {
-    //  Save the user to the database 
-    await user.save();
-    console.log('User added successfully');
-    res.redirect('/Welcome');
 
-  } catch (error) {
-    if (error.code === 11000 && error.keyPattern && error.keyValue && error.keyValue.Email) { 
-      // Duplicate email error
+    // ----------------- Checks -------------------
+
+    // Check that the identity card contains exactly 9 digits
+
+    if (!/^\d{9}$/.test(req.body.ID)) {
+      const errorMessage = 'ID must contain exactly 9 digits.';
+       console.error(errorMessage);
+       return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+    }
+
+    // Check if the ID already exists in the database
+
+    const existingID = await User.findOne({ ID: req.body.ID });
+    if (existingID) {
+      // If the ID already exists, display an error message
+      const errorMessage = 'ID already exists. Please choose a different ID.';
+      console.error(errorMessage);
+      // Display an alert with the error message
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+    }
+
+    // Check if the email already exists in the database
+
+    const existingEmail = await User.findOne({ Email: req.body.Email });
+    if (existingEmail) {
+      // If the email already exists, display an error message
       const errorMessage = 'Email already exists. Please choose a different email.';
       console.error(errorMessage);
       // Display an alert with the error message
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
-    } else {
-      console.error('Error adding user:', error);
-      res.send(error);
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
     }
+
+    // Check if the phone number already exists in the database
+
+    const existingPhone = await User.findOne({ Phone: req.body.Phone });
+    if (existingPhone) {
+      // If the phone number already exists, display an error message
+      const errorMessage = 'Phone number already exists. Please choose a different phone number.';
+      console.error(errorMessage);
+      // Display an alert with the error message
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+    }
+
+    // Check that the user is over 18 years old
+    const today = new Date();
+    const minBirthYear = today.getFullYear() - 18;
+    const birthday = new Date(req.body.Birthday);
+    const userBirthYear = birthday.getFullYear();
+
+    if (userBirthYear > minBirthYear) {
+      const errorMessage = 'You must be at least 18 years old to register.';
+      console.error(errorMessage);
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+    }
+
+    // Check if the gender field is provided
+    if (!req.body.Gender) {
+      const errorMessage = 'You must fill in what your gender is.';
+      console.error(errorMessage);
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+}
+
+    // ----------------- Add after hecking and everything is ok -------------------
+
+
+    // Save the user to the database 
+    const user = new User({
+      ID: req.body.ID,
+      FirstName: req.body.FirstName,
+      LastName: req.body.LastName,
+      Email: req.body.Email,
+      Password: req.body.Password,
+      Phone: req.body.Phone,
+      Birthday: req.body.Birthday,
+      Gender: req.body.Gender,
+    });
+    await user.save();
+    console.log('User added successfully');
+    res.redirect('/Welcome');
+  } catch (error) {
+    console.error('Error adding user:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
@@ -54,12 +111,83 @@ router.get('/users', async (req, res) => {
   }
 });
 
+// ------------- get user by email sendeing --------------
+
+router.get('/user', async (req, res) => {
+  try {
+      const Email = req.query.Email; // אימייל המשתמש שנשלח בבקשה
+      const user = await User.findOne({ Email: Email }); // מציאת המשתמש במסד הנתונים על פי האימייל
+      if (user) {
+          res.json(user); // שליחת המשתמש כתשובה בפורמט JSON
+      } else {
+          res.status(404).send('User not found'); // אם המשתמש לא נמצא, שליחת תשובת שגיאה
+      }
+  } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).send('Internal Server Error'); // שליחת תשובת שגיאה פנימית
+  }
+});
+
+// ------------- update user --------------
+
+router.post('/update-user', async (req, res) => {
+  const { ID, FirstName, LastName, Email, Password, Phone, Birthday, gender } = req.body;
+
+  try {
+
+  // Check for age over 18   
+
+      const birthDate = new Date(Birthday);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+      }
+      if (age < 18) {
+          let errorMessage = 'You must be at least 18 years old';
+          console.error(errorMessage);
+          return res.send(`<script>alert('${errorMessage}'); window.location.href='/edit'</script>`);
+      }
+
+// Check for a 9-digit ID number
+
+        if (ID.toString().length !== 9) {
+          let errorMessage = 'ID must be 9 digits';
+          console.error(errorMessage);
+          return res.send(`<script>alert('${errorMessage}'); window.location.href='/edit'</script>`);
+      }
+
+// Check for the existence of a phone number or system ID
+
+      const existingUser = await User.findOne({ $or: [{ Phone }, { ID }] });
+      if (existingUser && existingUser.Email !== Email) {
+          let errorMessage = 'Phone number or ID already exists';
+          console.error(errorMessage);
+          return res.send(`<script>alert('${errorMessage}'); window.location.href='/edit'</script>`);
+      }
+
+      const updatedUser = await User.findOneAndUpdate({ Email }, { ID, FirstName, LastName, Password, Phone, Birthday, Gender: gender }, { new: true });
+      if (!updatedUser) {
+          let errorMessage = 'User not found';
+          console.error(errorMessage);
+          return res.send(`<script>alert('${errorMessage}'); window.location.href='/edit'</script>`);
+      }
+      const successMessage = 'The details have been successfully updated.'
+      res.send(`<script>alert('${successMessage}'); window.location.href='/edit'</script>`);
+  } catch (error) {
+      console.error('Error updating user details:', error);
+      res.status(400).send(`<script>alert('${error.message}'); window.location.href='/edit'</script>`);
+  }
+});
+
+
    // --------------- Delete user from DB ---------------
    
 router.delete('/DeleteUser/:UserID', async (req, res) => {
   try {
-    const ID = req.params.ID;
-    await User.findByIdAndDelete(ID);
+    const UserID = req.params.UserID;
+    await User.findByIdAndDelete(UserID);
     res.status(200).send('User deleted successfully');
     console.log('User deleted successfully');
   } catch (error) {
@@ -92,7 +220,7 @@ router.post('/login', async (req, res) => {
       // Display an alert for no such user
       const errorMessage = 'No user found with the provided email and password.';
       console.error(errorMessage);
-      res.send(`<script>alert('${errorMessage}'); window.location.href='/LogIn'</script>`);
+      res.send(`<script>alert('${errorMessage}'); window.location.href='/loginPage'</script>`);
     }
   } catch (error) {
     console.error('Error during login:', error);
@@ -113,12 +241,18 @@ router.post('/reset-password', async (req, res) => {
     const user = await User.findOne({ ID: ID, Email: Email });
 
     if (!user) {
-      return alert('There is no user with this email or id.');
+   // Display an alert for no such user
+    const errorMessage = 'No user found with the provided email and ID.';
+    console.error(errorMessage);
+    res.send(`<script>alert('${errorMessage}'); window.location.href='/reset'</script>`);
     }
-
+    else
+    {
     // update password
     await User.updateOne({ ID: ID, Email: Email }, { Password: newPassword });
-    res.send('The password has been successfully updated.');
+    const successMessage = 'The password has been successfully updated.'
+    res.send(`<script>alert('${successMessage}'); window.location.href='/reset'</script>`);
+    }
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -142,20 +276,7 @@ router.post('/addAsset', async (req, res) => {
     Available: req.body.Available,
   });
   try {   
-    /*
-    // Check if Quantity is less than 8
-    if (req.body.Quantity >= 8) {
-      throw new Error('Quantity must be less than 8.');
-    }
-    // Check if Price is less than 2500
-    if (req.body.Price >= 2500) {
-      throw new Error('Price must be less than 2500.');
-    }
-    // Check if Date is later than today
-    if (new Date(req.body.Date) >= new Date()) {
-      throw new Error('Date must be later than today.');
-    }  
-*/
+
     // Save the Asset to the database
     await asset.save();
     console.log('Asset added successfully'); 
@@ -369,8 +490,8 @@ router.get('/contacts', async (req, res) => {
    
 router.delete('/DeleteContact/:ContactID', async (req, res) => {
   try {
-    const ID = req.params.ID;
-    await Contact.findByIdAndDelete(ID);
+    const ContactID = req.params.ContactID;
+    await Contact.findByIdAndDelete(ContactID);
     res.status(200).send('Massege deleted successfully');
     console.log('Massege deleted successfully');
   } catch (error) {
@@ -443,6 +564,15 @@ router.get('/trades', function (req, res) {
   res.sendFile(path.join(__dirname, '../../views', 'History.html'));
 });
 
+// Sends to Reset page
+router.get('/reset', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../views', 'ForgotPassword.html'));
+});
+
+// Sends to Reset page
+router.get('/edit', function (req, res) {
+  res.sendFile(path.join(__dirname, '../../views', 'Edit.html'));
+});
 
 
 module.exports = router;

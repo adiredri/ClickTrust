@@ -19,7 +19,8 @@
     <nav>
         <div class="nav-bar">
         <a href="manageUsers.html">Manage Users</a>
-        <a href="manageAssets.html">Manage Asset</a>
+        <a href="manageAssest.html">Manage Asset</a>
+        <a href="AddProduct.html">Add Asset</a>
         <a href="History.html">History</a>
         <a href="SignUp.html">Log Out</a>
         </div>
@@ -58,12 +59,12 @@
     <table>
         <thead>
           <tr>
-            <th>ID Massege</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Massege</th>
-            <th>Delete</th>
+            <th style="width: 30%">ID Massege</th>
+            <th style="width: 40%">Name</th>
+            <th style="width: 50%">Email</th>
+            <th style="width: 30%">Phone</th>
+            <th style="width: 200%">Massege</th>
+            <th style="width: 25%">Delete</th>
           </tr>
         </thead>
         <tbody id="contactTableBody">
@@ -154,13 +155,13 @@ function renderContacts(contacts) {
   contacts.forEach((contact) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${contact._id}</td>
-      <td>${contact.Name}</td>
-      <td>${contact.Email}</td>     
-      <td>${contact.Phone}</td>
-      <td>${contact.Massege}</td>
-      <td>
-      <button class="delete-button" onclick="DeleteContcat(event, '${user._id}')">Delete</button>
+      <td style="width: 30%">${contact._id}</td>
+      <td style="width: 40%">${contact.Name}</td>
+      <td style="width: 50%">${contact.Email}</td>     
+      <td style="width: 30%">${contact.Phone}</td>
+      <td style="width: 200%">${contact.Massege}</td>
+      <td style="width: 25%">
+      <button class="delete-button" onclick="DeleteContcat(event, '${contact._id}')">Delete</button>
       </td>
     `;
 
@@ -182,7 +183,7 @@ function renderContacts(contacts) {
     contacts.forEach((contact) => {
       const Name = contact.children[1].innerText;
       const Email = contact.children[2].innerText;
-      const Phone = contact.children[3].innerText;
+      const Phone = contact.children[3].innerText.toString();
 
       contact.style.display = '';
 
@@ -194,7 +195,7 @@ function renderContacts(contacts) {
         contact.style.display = 'none';
       }
 
-      if (searchByPhone.value && !Phone.toLowerCase().includes(searchByPhone.value.toLowerCase())) {
+      if (searchByPhone.value && !Phone.includes(searchByPhone.value)) {
         contact.style.display = 'none';
       }
 
@@ -202,12 +203,6 @@ function renderContacts(contacts) {
   }
 
     let ascendingOrder = true;
-    contactTableBody.innerHTML = '';
-    contacts.forEach(contact => {
-    contactTableBody.appendChild(contact);
-    });
-
-    ascendingOrder = !ascendingOrder;
 
 function clearFilters() {  // Clear the sorts
   document.getElementById('Name').value = '';

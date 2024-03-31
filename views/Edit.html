@@ -13,14 +13,15 @@
 
     <div class="video-background">
         <video autoplay muted loop>
-            <source src="images/Digital.mp4" type="video/mp4">
+            <source src="images/global2.mp4" type="video/mp4">
         </video>
     </div>
     <nav>
         <div class="nav-bar">
         <a href="Contact.html">Contact Us</a>
         <a href="About.html">About Us</a>
-        <a href="LogIn.html">Cart</a>
+        <a href="AddProduct.html">Add Asset</a>
+        <a href="History.html">History</a>
         <a href="SignUp.html">Log Out</a>
         </div>
     </nav>
@@ -37,13 +38,13 @@
         <!-- start left form -->
 
         <div class="container left">
-            <form style="margin-top: -190px;">
+            <form style="margin-top: -190px;" action="/update-user" method="POST">
                 <h2>Edit Personal Details</h2><br>
                 <input type="number" id="ID" name="ID" placeholder="ID" required><br><br>
                 <input type="text" id="FirstName" name="FirstName" placeholder="First name" required><br><br>
                 <input type="text" id="LastName" name="LastName" placeholder="Last name" required><br><br>
-                <input type="email" id="Email" name="Email" placeholder="Email" required><br><br>
-                <input type="password" id="Password" name="Password" placeholder="Password" required><br><br>
+                <input type="email" id="Email" name="Email" placeholder="Email" required readonly><br><br>
+                <input type="text" id="Password" name="Password" placeholder="Password" required><br><br>
                 <input type="tel" id="Phone" name="Phone" placeholder="Phone" required><br><br>
                 <input type="date" id="Birthday" name="Birthday" placeholder="Birthday" required><br><br><br><br>
                 <div class="gender-options">
@@ -51,42 +52,22 @@
                     <input type="radio" id="female" name="gender" value="female"> <label for="female">Female</label>
                     <input type="radio" id="other" name="gender" value="other"><label for="other">Other</label>
                 </div><br><br>
-                <input type="submit" value="Update" id="update-button">
+                <input type="submit" value="Update" id="update-button" style="margin-top: 20px; margin-bottom: 150px;">
             </form>
         </div>
 
             <!-- end left form -->
-
-           <!-- start center form -->
-
-
-           <div class="container center">
-            <form style="margin-top: -190px;">
-                <h2>Edit Bank & Payment Details</h2><br>
-                <input type="number" id="AccountNumber" name="AccountNumber" placeholder="Account Number" required><br><br>
-                <input type="number" id="BranchNumber" name="BranchNumber" placeholder="Branch Number" required><br><br>
-                <input type="number" id="BankNumber" name="BankNumber" placeholder="Bank Number" required><br><br>
-                <input type="number" id="CardNumber" name="CardNumber" placeholder="Card Number" required><br><br>
-                <input type="date" id="ExpiryDate" name="ExpiryDate" placeholder="Expiry Date" required><br><br>
-                <input type="number" id="CVV" name="CVV" placeholder="CVV" required><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                <input type="submit" value="Update" id="update-button" style="margin-bottom: 150px;">
-            </form>
-        </div>
-    
-            <!-- end center form -->
 
             <!-- start right form -->
 
             <div class="container right">
                 <h1>Menu</h1>
                 <div class="ProfilePic" id="ProfilePic">
-                    <img src="images/adir.jpg" alt="ProfilePic">
+                    <img src="images/avatar3.jpg" alt="ProfilePic">
                 </div>
                 <form style="margin-top: 120px;">
-                    <div class="change-profile-pic">
-                        <input type="image" src="images/edit.png" name="ProfilePic" required  style="width: 25%; height: auto;">
-                    </div>
-                    <br><br><br><br><h2>Hi, Adir</h2>
+                    <br><br><br><br>
+                    <h2>Hi, <span id="customer-name"></span></h2>
                     <a href="AddProduct.html" class="menu-button">Add New Digital Asset</a>
                     <a href="History.html" class="menu-button">Buy & Sell History</a>
                     <a class="choosed-button">Edit Details</a>
@@ -97,51 +78,94 @@
       <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
       <div class="elfsight-app-9499548e-2fe2-4f40-910f-3ad318347df0" data-elfsight-app-lazy></div>
 
-      <script> // home page customer / admin
+<script> // home page customer / admin
 
-        // Retrieve the email from session storage
-         const Email = sessionStorage.getItem('Email');
-      
-        // Determine the home page URL based on the user's role
-        let homePageUrl;
-        if (Email === null) { 
-          homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-        } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
-          homePageUrl = '/admin?Email=' + Email;
-        } else {
-          homePageUrl = '/customer?Email=' + Email;
+        // Define the getFirstName function
+        async function getFirstName(Email) {
+        try {
+          const response = await fetch(`/get-first-name?Email=${Email}`);
+          const data = await response.json();
+          document.getElementById('customer-name').textContent = data.FirstName; // Update the customer's name
+        } catch (error) {
+          console.error('Error fetching first name:', error);
+          document.getElementById('customer-name').textContent = 'Error fetching first name';
         }
-      
-         // Set the href attribute of the home link
-         const homeLink = document.getElementById('home-link');
-         homeLink.setAttribute('href', homePageUrl);
-      </script>
+        }
+        
+        // Update the HTML content with the customer's first name
+        window.addEventListener('DOMContentLoaded', () => {
+          getFirstName(Email); // Call the function after the DOM content has been loaded
+          sessionStorage.setItem('Email', Email);
+        });
+        
+                // Retrieve the email from session storage
+                 const Email = sessionStorage.getItem('Email');
+              
+                // Determine the home page URL based on the user's role
+                let homePageUrl;
+                if (Email === null) { 
+                  homePageUrl = '/index'; // Set home page URL to '/index' when email is null
+                } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
+                  homePageUrl = '/admin?Email=' + Email;
+                } else {
+                  homePageUrl = '/customer?Email=' + Email;
+                }
+              
+                 // Set the href attribute of the home link
+                 const homeLink = document.getElementById('home-link');
+                 homeLink.setAttribute('href', homePageUrl);
+</script>
 
 
 <script>
 
-    // הגדרת הפרטים האישיים של המשתמש - דוגמה למידע שיש לך במסד הנתונים
-    const userDetails = {
-        ID: 123456, // דוגמה למזהה ייחודי
-        FirstName: 'John',
-        LastName: 'Doe',
-        Email: Email,
-        Password: '********', // דוגמה לסיסמה (בטוח לא לחשוף)
-        Phone: '123-456-7890',
-        Birthday: '1990-01-01', // דוגמה לתאריך לידה
-        Gender: 'male' // דוגמה למגדר
-    };
+   //  ---------------- user details -------------------
 
-    // מילוי ה-placeholder בפרטים האישיים
-    document.getElementById('ID').placeholder = userDetails.ID;
-    document.getElementById('FirstName').placeholder = userDetails.FirstName;
-    document.getElementById('LastName').placeholder = userDetails.LastName;
-    document.getElementById('Email').placeholder = userDetails.Email;
-    document.getElementById('Password').placeholder = userDetails.Password;
-    document.getElementById('Phone').placeholder = userDetails.Phone;
-    document.getElementById('Birthday').placeholder = userDetails.Birthday;
-    document.getElementById(userDetails.Gender).checked = true; // בדיקה של המגדר
+     async function fetchUserData(Email) {
+        try {
+            const response = await fetch(`/user?Email=${Email}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+            return null;
+        }
+    }
+
+    async function displayUserData() {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const userEmail = urlParams.get('Email');
+        const userData = await fetchUserData(Email);
+        if (userData) {
+            document.getElementById('ID').value = userData.ID;
+            document.getElementById('FirstName').value = userData.FirstName;
+            document.getElementById('LastName').value = userData.LastName;
+            document.getElementById('Email').value = userData.Email;
+            document.getElementById('Password').value = userData.Password;
+            document.getElementById('Phone').value = userData.Phone;
+
+            const birthdayDate = new Date(userData.Birthday);
+            const formattedBirthday = birthdayDate.getFullYear() + '-' + ('0' + (birthdayDate.getMonth() + 1)).slice(-2) + '-' + ('0' + birthdayDate.getDate()).slice(-2);
+            document.getElementById('Birthday').value = formattedBirthday;
+
+        // Check gender and set the appropriate radio button
+        if (userData.Gender === 'male') {
+            document.getElementById('male').checked = true;
+        } else if (userData.Gender === 'female') {
+            document.getElementById('female').checked = true;
+        } else {
+            document.getElementById('other').checked = true;
+        } 
+
+        }
+    }
+
+    window.onload = displayUserData;
+
 </script>
 
-    </body>
+</body>
 </html>

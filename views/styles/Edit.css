@@ -166,15 +166,6 @@ nav {
     width: 300px;
 }
 
-.center {
-    position: absolute;
-    text-align: center;
-    align-items: center;
-    width: 450px;
-    left: 55%; /* מיקום אופקי באמצע העמוד */
-    transform: translateX(-50%);
-}
-
 .container input{
     
      color: rgba(255, 255, 255, 0.9);

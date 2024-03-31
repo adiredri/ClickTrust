@@ -18,8 +18,9 @@
     </div>
     <nav>
         <div class="nav-bar">
-        <a href="manageUsers.html">Manage Users</a>
         <a href="manageContact.html">Customer Service</a>
+        <a href="manageUsers.html">Manage Users</a>
+        <a href="AddProduct.html">Add Asset</a>
         <a href="History.html">History</a>
         <a href="SignUp.html">Log Out</a>
         </div>
@@ -68,16 +69,16 @@
     <table>
         <thead>
           <tr>
-            <th>ID Asset</th>
+            <th style="width: 30%">ID Asset</th>
             <th>Category</th>
             <th>Name</th>
             <th>Place</th>
-            <th>Date</th>
-            <th>Time</th>
-            <th>Quantity</th>
-            <th>Price($)</th>
-            <th>Email Seller</th>
-            <th>Delete</th>
+            <th style="width: 30%">Date</th>
+            <th style="width: 25%">Time</th>
+            <th style="width: 30%">Quantity</th>
+            <th style="width: 30%">Price($)</th>
+            <th style="width: 60%">Email Seller</th>
+            <th style="width: 25%">Delete</th>
 
           </tr>
         </thead>
@@ -95,7 +96,7 @@
         const priceValue = document.getElementById("price-value");
         
         priceSlider.addEventListener("input", function() {
-            priceValue.textContent = this.value / 2; // הצגת חצי הערך שנבחר
+            priceValue.textContent = this.value 
         });
         </script>
 
@@ -177,16 +178,16 @@ function renderAssets(assets) {
   assets.forEach((asset) => {
     const row = document.createElement('tr');
     row.innerHTML = `
-      <td>${asset._id}</td>
+      <td style="width: 30%">${asset._id}</td>
       <td>${asset.Category}</td>
       <td>${asset.NameDigitalAsset}</td>
       <td>${asset.Place}</td>
-      <td>${formatDate(asset.Date)}</td>
-      <td>${formatTime(asset.Time)}</td>
-      <td>${asset.Quantity}</td>
-      <td>${asset.Price}</td>
-      <td>${asset.Email}</td>
-      <td>
+      <td style="width: 30%">${formatDate(asset.Date)}</td>
+      <td style="width: 25%">${formatTime(asset.Time)}</td>
+      <td style="width: 30%">${asset.Quantity}</td>
+      <td style="width: 30%">${asset.Price}</td>
+      <td style="width: 60%">${asset.Email}</td>
+      <td style="width: 25%">
       <button class="delete-button" onclick="DeleteAsset(event, '${asset._id}')">Delete</button>
       </td>
     `;
