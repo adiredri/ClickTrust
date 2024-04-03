@@ -11,34 +11,34 @@ body {
 
   .logo {
     position: relative;
-    max-height: 70px; /* גובה מרבי של הלוגו */
-    max-width: 92%; /* רוחב מרבי של הלוגו */
-    top: 10px; /* מרחק מהגבול העליון של המסך */
-    left: -290px; /* מרחק מהגבול השמאלי של המסך */
-    z-index: 1000; /* מבטיח שהלוגו יוצג מעל כל שאר האלמנטים בעמוד */
+    max-height: 70px;
+    max-width: 92%; 
+    top: 10px; 
+    left: -290px; 
+    z-index: 1000; 
 }
   #widget {
     background-color: rgb(59, 64, 156);
-    width: 50px; /* רוחב */
-    height: 50px; /* גובה */
-    border-radius: 50%; /* צורת העיגול */
-    position: fixed; /* כדי להצמיד אותו לצד הימני */
-    top: 20px; /* מרחק מהלמעלה */
-    right: 20px; /* מרחק מצד ימין */
-    cursor: pointer; /* כדי להראות שמדובר בכפתור שניתן ללחיצה */
-    display: flex; /* כדי לאפשר מרכוז תוכן בתוך העיגול */
-    justify-content: center; /* מרכוז תוכן אופקית בתוך העיגול */
-    align-items: center; /* מרכוז תוכן אנכית בתוך העיגול */
-    color: white; /* צבע הטקסט בתוך העיגול */
-    font-weight: bold; /* משקל הגופן */
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    position: fixed; 
+    top: 20px; 
+    right: 20px; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: center;
+    align-items: center; 
+    color: white; 
+    font-weight: bold; 
 }
 
 #widget img {
-    max-width: 80%; /* קיטון התמונה */
-    max-height: 80%; /* קיטון התמונה */
-    border-radius: 50%; /* לשמור על צורת העיגול */
+    max-width: 80%; 
+    max-height: 80%; 
+    border-radius: 50%; 
     display: block;
-    margin: auto; /* מרכז את התמונה באופן אוטומטי בתוך העיגול */
+    margin: auto; 
 }
 
 .video-background {
@@ -96,7 +96,7 @@ li {
     margin-top: 60px;
     margin-bottom:70px;
     max-width: 1350px;
-    padding-left: 20px; /* זיזת הטקסט קצת ימינה */
+    padding-left: 20px;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2));
     backdrop-filter: blur(40px);  /*blur effect*/
     -webkit-backdrop-filter: blur(40px); /*blur effect*/
@@ -130,8 +130,7 @@ li {
     background-color: #0056b3;
 }
 
-/* עיצוב הטקסט בתוך הכפתור */
 .btn-back:before {
-    content: '\2190'; /* הוספת סמל חזרה (חץ שמאלה) */
-    margin-right: 8px; /* מרווח מימין */
+    content: '\2190'; 
+    margin-right: 8px;
 }

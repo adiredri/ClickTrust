@@ -190,8 +190,8 @@ nav {
 }
   
   .ProfilePic p {
-    margin-top: -40px; /* מרווח מעל לטקסט */
-    color: rgb(0, 0, 0); /* צבע טקסט לבן */
+    margin-top: -40px; 
+    color: rgb(0, 0, 0); 
   }
 
   .search-container {
@@ -298,95 +298,94 @@ input[type="range"]::-moz-range-thumb {
 
 
 #clearFiltersButton {
-  background-color: #f44336; /* צבע רקע */
-  color: white; /* צבע טקסט */
-  padding: 8px; /* רווח בתוך הכפתור */
-  text-align: center; /* תיאום הטקסט למרכז הכפתור */
-  display: inline-block; /* תצוגה כבלוק אך בלי להפריד את האלמנטים */
-  border: none; /* מסגרת ריקה */
-  border-radius: 20px; /* פינות מעוגלות */
-  cursor: pointer; /* מראה סמן עכבר כעכבר יד */
-  transition: background-color 0.3s; /* אנימציה על צבע רקע */
-  font-size: 14px; /* גודל הטקסט */
+  background-color: #f44336; 
+  color: white;
+  padding: 8px; 
+  text-align: center; 
+  display: inline-block;
+  border: none; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  transition: background-color 0.3s;
+  font-size: 14px; 
 }
 
 #clearFiltersButton:hover {
-  background-color: #d32f2f; /* צבע רקע בעת העכבר מעל הכפתור */
+  background-color: #d32f2f;
 }
 
 .delete-button {
   background-color: #d32f2f; 
-  color: white; /* צבע טקסט לבן */
-  border: none; /* ללא גבולות */
-  padding: 3px 10px; /* ריפוד */
-  border-radius: 20px; /* עיגול פינות */
-  cursor: pointer; /* סמן עכבר מצב "יד" */
-  font-size: 16px; /* גודל גופן */
-  transition-duration: 0.4s; /* זמן העברת ההחלפה */
-  text-align: center; /* מרכוז אנכי */
+  color: white;
+  border: none; 
+  padding: 3px 10px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  transition-duration: 0.4s;
+  text-align: center; 
 }
 
 .delete-button:hover {
-  background-color: #d32f2f; /* צבע ירוק עדין בהיעברות */
+  background-color: #d32f2f; 
 }
 
  /*------------------------------- table ----------------------------*/
  table {
   border-collapse: collapse;
-  width: 95%; /* רוחב הטבלה משתמש ב-90% מרוחב האב */
-  border: 1px solid rgba(255, 255, 255, 0.1); /* קווים דקים סביב הטבלה */
+  width: 95%; 
+  border: 1px solid rgba(255, 255, 255, 0.1); 
   margin: auto;
 }
 
 th, td {
   padding: 10px;
   text-align: center;
-  border-right: 1px solid rgba(0, 0, 0, 0.1); /* קו ימני */
-  vertical-align: middle; /* יישור אנכי של התאים */
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  vertical-align: middle;
   width: 50%;
   
 }
 
 th {
-  font-size: 18px; /* גודל הפונט של כותרות העמודות */
-  padding: 4px; /* רווח פנימי בתאים */
+  font-size: 18px; 
+  padding: 4px; 
 }
 
-/* תאים פנימיים */
 td {
-  font-size: 12px; /* גודל הפונט בתאים פנימיים */
-  padding: 6px; /* רווח פנימי בתאים */
+  font-size: 12px;
+  padding: 6px; 
 }
 
 th:first-child, td:first-child {
-  border-left: 1px solid rgba(0, 0, 0, 0.1); /* קו שמאלי */
+  border-left: 1px solid rgba(0, 0, 0, 0.1); 
 }
 
 tbody tr:nth-child(even) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)); /* גריד לרקע כל השורות הזוגיות */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
 }
 
 tbody tr:nth-child(odd) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)); /* גריד לרקע כל השורות האי-זוגיות */
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)); 
 }
 
 tr {
   font-size: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* קווים בין השורות */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 
 }
 
 .text-box td {
-  padding: 5px; /* ריפוד קל סביב כל תא */
-  white-space: nowrap; /* אין שורות חדשות בתוך התא */
-  overflow: hidden; /* מנעת חתיכת תוכן מצ'יעה מהתא */
-  text-overflow: ellipsis; /* החתימה מציגה סימני נקודה אם התוכן חורך */
+  padding: 5px; 
+  white-space: nowrap; 
+  overflow: hidden;
+  text-overflow: ellipsis; 
 }
 
 .text-box tbody {
   display: block;
   overflow-y: auto;
-  max-height: 300px; /* גובה מרבי */
+  max-height: 300px; 
 }
 
 .text-box tbody tr:nth-child(even) {
@@ -400,6 +399,6 @@ tr {
 .text-box tr {
   font-size: 20px;
   display: flex;
-  justify-content: center; /* מרכוז אופקי */
-  align-items: center; /* מרכוז אנכי */
+  justify-content: center;
+  align-items: center; 
 }

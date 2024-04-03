@@ -311,9 +311,9 @@ router.patch('/assets/:id', async (req, res) => {
   const AssetId = req.params.id;
   try {
     const updatedAsset = await Asset.findOneAndUpdate(
-      { _id: AssetId }, // מצא את הנכס לפי ה-ID
-      { $set: { Available: false } }, // עדכן את השדה Available לערך false
-      { new: true } // החזר את הנכס המעודכן
+      { _id: AssetId }, 
+      { $set: { Available: false } }, 
+      { new: true } 
     );
 
     if (!updatedAsset) {

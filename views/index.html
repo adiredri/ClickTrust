@@ -154,7 +154,7 @@
           const priceValue = document.getElementById("price-value");
           
           priceSlider.addEventListener("input", function() {
-              priceValue.textContent = this.value ; // הצגת חצי הערך שנבחר
+              priceValue.textContent = this.value ; 
           });
           </script>
           <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
@@ -198,7 +198,7 @@
        <td style="width: 25%;">${formatTime(asset.Time)}</td>
        <td style="width: 30%;">${asset.Quantity}</td>
        <td style="width: 25%;">${asset.Price}</td>
-       <td style="width: 30%;">
+       <td style="width: 20%;">
        <button class="buy-button" onclick="alert('You need to log in to buy.');">Buy</button>
        </td>
       `;
@@ -267,7 +267,7 @@ function clearFilters() {  // Clear the sorts
   document.getElementById('Name').value = '';
   document.getElementById('Category').value = '';
   document.getElementById('price').value = '';
-  filterAssets(); // קריאה לפונקציה לסינון
+  filterAssets();
 }
 
   // ---------- Event listeners ----------
