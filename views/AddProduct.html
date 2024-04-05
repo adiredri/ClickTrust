@@ -29,7 +29,7 @@
         <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
     </div>
     <div id="widget">
-        <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+        <a id="home-link" href="#"> 
             <img src="images/homepage.png" alt="Image" id="widget-image"></a>
     </div>
 
@@ -177,16 +177,14 @@ async function createAsset() {
     const date = formData.get('Date');
     const time = formData.get('Time');
     const currentDate = new Date();
-    const datetimeString = `${date}T${time}`; // שילוב תאריך ושעה למחרוזת תאריך-זמן
+    const datetimeString = `${date}T${time}`;
     const selectedDate = new Date(datetimeString);
 
-    // בדיקה אם המחרוזה של התאריך ריקה
     if (date.trim() === '') {
       alert('Please enter a valid date.');
       return;
     }
 
-    // בדיקה אם המחרוזה של השעה ריקה
     if (time.trim() === '') {
       alert('Please enter a valid time.');
       return;
@@ -194,13 +192,13 @@ async function createAsset() {
 
     if (parseInt(price) > 5000) {
       alert('Price cannot be greater than 5000.');
-      location.reload(); // העלאה מחדש של העמוד
+      location.reload(); 
       return;
     }
 
     if (selectedDate < currentDate) {
       alert('Date cannot be in the past.');
-      location.reload(); // העלאה מחדש של העמוד
+      location.reload(); 
       return;
     }
 
@@ -209,7 +207,6 @@ async function createAsset() {
       data[key] = value;
     });
 
-    // הוספת המייל מהסשן לגוף הבקשה
     data['Email'] = sessionStorage.getItem('Email');
     
     const response = await fetch('/addAsset', {
@@ -227,7 +224,7 @@ async function createAsset() {
 
     console.log('Asset created successfully');
     alert('Asset created successfully');
-    location.reload(); // העלאה מחדש של העמוד
+    location.reload(); 
 
   } catch (error) {
     console.error('Error creating asset:', error);
