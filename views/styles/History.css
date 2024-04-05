@@ -144,6 +144,8 @@ nav {
      padding: 2px;
      height: 40%;
      width: 90%;
+     align-items: center;
+     justify-content: center;
  }
 
 .container input{
@@ -185,28 +187,6 @@ nav {
     text-align: center;
     justify-content: center;
 }
-
-.ProfilePic {
-    position: fixed;
-    width: 160px; 
-    height: 160px; 
-    border-radius: 50%; 
-    overflow: hidden; 
-    position: absolute; 
-    top: 90px 
-
-  }
-
-  .ProfilePic img {
-    width: 100%; 
-    height: auto; 
-  }
-  
-  .ProfilePic p {
-    margin-top: -40px; 
-    color: rgb(0, 0, 0); 
-  }
-
   .search-container {
     font-size: 20px;
     color: rgba(255, 255, 255, 0.9);
@@ -308,65 +288,6 @@ input[type="range"]::-moz-range-thumb {
   background: #4CAF50;
   cursor: pointer;
 }
-  .menu-button {
-    display: block;
-    width: 80%;
-    color: white;
-    animation-duration: 2s;
-    transition: font-size 0.3s ease, box-shadow 0.2s ease, width 0.2s ease,height 0.2s ease;/* Add a transition for smooth animation */
-    border:1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 30px;
-    padding: 15px 20px;
-    margin: 10px auto;
-    text-align: center;
-    font-size: 18px;
-}
-
-.menu-button:hover {
-    transform: translateY(-2px);
-    width: 90%;
-    font-size: 22px;
-    height: 10px;
-    box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
-}
-
-.menu-button:focus {
-    background-color: #45a049;
-}
-
-.choosed-button {
-    display: block;
-    width: 80%;
-    color: white;
-    animation-duration: 2s;
-    transition: font-size 0.3s ease, box-shadow 0.2s ease, width 0.2s ease,height 0.2s ease;/* Add a transition for smooth animation */
-    border:1px solid rgba(255, 255, 255, 0.1);
-    background-color: #45a049;
-    border-radius: 30px;
-    padding: 15px 20px;
-    margin: 10px auto;
-    text-align: center;
-    font-size: 18px;
-}
-#update-button{
-    width: 50%;
-    color: white;
-    background-color: rgb(42, 47, 119);
-    animation-duration: 2s;
-    transition: font-size 0.3s ease, box-shadow 0.2s ease, width 0.2s ease,height 0.2s ease;/* Add a transition for smooth animation */
-    font-size: 20px;
-    height: 35px;
-    cursor: pointer;
-}
-#update-button:focus{
-    background-color: rgb(84, 190, 84);
-}
-#update-button:hover{
-    width: 55%;
-    font-size: 23px;
-    height: 40px;
-    box-shadow: 0 8px 32px 0 rgba(255, 255, 255, 0.1);
-}
 
 #clearFiltersButton {
   background-color: #f44336; 
@@ -390,6 +311,7 @@ input[type="range"]::-moz-range-thumb {
   border-collapse: collapse;
   width: 95%; 
   border: 1px solid rgba(255, 255, 255, 0.1); 
+  margin: auto;
 }
 
 th, td {
@@ -429,8 +351,6 @@ tr {
 
 }
 
-
-
 .text-box td {
   padding: 5px; 
   white-space: nowrap; 
@@ -441,7 +361,7 @@ tr {
 .text-box tbody {
   display: block;
   overflow-y: auto;
-  max-height: 300px;
+  height: 70%; 
 }
 
 .text-box tbody tr:nth-child(even) {
