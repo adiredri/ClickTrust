@@ -29,7 +29,7 @@
         <img src="images/WhiteLogo.png" alt="My Logo" class="logo">
     </div>
     <div id="widget">
-      <a id="home-link" href="#"> <!-- שימו לב ל-ID החדש כאן -->
+      <a id="home-link" href="#">
           <img src="images/homepage.png" alt="Image" id="widget-image"></a>
   </div>
 
@@ -96,7 +96,7 @@
         const priceValue = document.getElementById("price-value");
         
         priceSlider.addEventListener("input", function() {
-            priceValue.textContent = this.value ; // הצגת חצי הערך שנבחר
+            priceValue.textContent = this.value ; 
         });
         </script>
 
@@ -165,7 +165,7 @@ async function renderAssets() {
         <td style="width: 25%">${trade._id}</td>
         <td style="width: 30%">${formatDate(trade.TransDate)}</td>
         <td style="width: 25%">${trade.TransTime}</td>
-        <td style="width: 25%">${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
+        <td class="trade-type" style="width: 25%">${trade.BuyerEmail === userEmail ? 'Buy' : 'Sell'}</td>
         <td style="width: 25%">${trade.AssetID}</td>
         <td>${asset.Category || ''}</td>
         <td>${asset.NameDigitalAsset || ''}</td>
@@ -176,6 +176,7 @@ async function renderAssets() {
         <td style="width: 30%">${asset.Price || ''}</td>
         <td style="width: 50%">${trade.BuyerEmail === userEmail ? trade.SellerEmail : trade.BuyerEmail}</td>
       `;
+      
       tradeTableBody.appendChild(row);
     });
   } catch (error) {

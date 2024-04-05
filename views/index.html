@@ -72,8 +72,8 @@
     <table>
       <thead>
         <tr>
-          <th style="width: 25%;">ID Asset</th>
-          <th>Category</th>
+          <th style="width: 30%;">ID Asset</th>
+          <th style="width: 55%;">Category</th>
           <th>Name</th>
           <th>Place</th>
           <th style="width: 40%;">Date</th>
@@ -190,8 +190,8 @@
     assets.forEach((asset) => {
       const row = document.createElement('tr');
       row.innerHTML = `
-       <td style="width: 25%;">${asset._id}</td>
-       <td>${asset.Category}</td>
+       <td style="width: 30%;">${asset._id}</td>
+       <td style="width: 55%;">${asset.Category}</td>
        <td>${asset.NameDigitalAsset}</td>
        <td>${asset.Place}</td>
        <td style="width: 40%;">${formatDate(asset.Date)}</td>
