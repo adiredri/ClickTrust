@@ -127,7 +127,6 @@ router.get('/user', async (req, res) => {
       res.status(500).send('Internal Server Error'); // שליחת תשובת שגיאה פנימית
   }
 });
-
 // ------------- update user --------------
 
 router.post('/update-user', async (req, res) => {
