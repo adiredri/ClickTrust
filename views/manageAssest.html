@@ -44,7 +44,7 @@
         <input type="date" id="DateTrans" style="width: 180px;" oninput="filterAssets()">
       </div>
       <div>
-        <label for="Name">Search by Name</label>
+        <label for="Name">Search by Email Seller</label>
         <input type="text" id="Name" style="width: 220px;" oninput="filterAssets()">
       </div>
       <div>
@@ -210,7 +210,7 @@ function renderAssets(assets) {
 
     assets.forEach((asset) => {
       const DateTrans = asset.children[4].innerText;
-      const AssetName = asset.children[2].innerText;
+      const AssetName = asset.children[8].innerText;
       const Category = asset.children[1].innerText;
       const price = parseFloat(asset.children[7].innerText);
 
