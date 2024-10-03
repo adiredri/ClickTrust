@@ -5,7 +5,8 @@ const User = require('../models/user');
 const Asset = require('../models/asset');
 const Trade = require('../models/trades');
 const Contact = require('../models/contact');
-
+require("dotenv").config({ path: __dirname + "../../.env" });
+const { twitterClient } = require("../../twitterClient");
 
 //  --------------------------------- SIGNUP -------------------------------------------
 
@@ -274,11 +275,24 @@ router.post('/addAsset', async (req, res) => {
     Email: req.body.Email,
     Available: req.body.Available,
   });
+  const tweetContent = `We are exited to announe that we Just added a new asset\nby the name ${asset.NameDigitalAsset} from Category ${asset.Category} to our trading platform!\nfor the price of just ${asset.Price}$!.\n\nGood Luck Trading!`;
+
   try {   
 
     // Save the Asset to the database
     await asset.save();
     console.log('Asset added successfully'); 
+
+    const tweet = async () => {
+      try {
+        await twitterClient.v2.tweet(tweetContent);
+        console.log("activated the tweet function-tweeted the tweet");
+      } catch (e) {
+        console.log(e)
+      }
+    }
+    tweet();
+
     res.status(200).json({ success: true }); // Sending a success response
 
   } catch (error) {

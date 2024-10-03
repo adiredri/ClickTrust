@@ -309,7 +309,7 @@ input[type="range"]::-moz-range-thumb {
  /*------------------------------- table ----------------------------*/
  table {
   border-collapse: collapse;
-  width: 95%; 
+  width: 95%;
   border: 1px solid rgba(255, 255, 255, 0.1); 
   margin: auto;
 }
@@ -348,7 +348,6 @@ tbody tr:nth-child(odd) {
 tr {
   font-size: 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-
 }
 
 .text-box td {
@@ -365,11 +364,11 @@ tr {
 }
 
 .text-box tbody tr:nth-child(even) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.253), rgba(255, 255, 255, 0.5));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.599), rgba(255, 255, 255, 0.5));
 }
 
 .text-box tbody tr:nth-child(odd) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.192), rgba(255, 255, 255, 0.3));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.566), rgba(255, 255, 255, 0.3));
 }
 
 .text-box tr {

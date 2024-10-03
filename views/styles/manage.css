@@ -363,11 +363,11 @@ th:first-child, td:first-child {
 }
 
 tbody tr:nth-child(even) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.532), rgba(255, 255, 255, 0.3)); 
 }
 
 tbody tr:nth-child(odd) {
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3)); 
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.532), rgba(255, 255, 255, 0.3)); 
 }
 
 tr {
