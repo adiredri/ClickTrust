@@ -112,7 +112,7 @@
   let homePageUrl;
   if (Email === null) { 
     homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-  } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
+  } else if (Email === 'adire7399@gmail.com') {
     homePageUrl = '/admin?Email=' + Email;
   } else {
     homePageUrl = '/customer?Email=' + Email;
@@ -122,11 +122,6 @@
    const homeLink = document.getElementById('home-link');
    homeLink.setAttribute('href', homePageUrl);
 </script>
-
-
-
-
-
 
 <script>
 
@@ -248,7 +243,7 @@ function clearFilters() {  // Clear the sorts
   document.getElementById('Name').value = '';
   document.getElementById('Category').value = '';
   document.getElementById('price').value = '';
-  filterAssets(); // קריאה לפונקציה לסינון
+  filterAssets(); 
 }
 
   // --------------------------- Event listeners ----------------------
@@ -279,7 +274,5 @@ function clearFilters() {  // Clear the sorts
   });
 
 </script>
-
-
 </body>
 </html>

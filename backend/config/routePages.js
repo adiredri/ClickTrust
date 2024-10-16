@@ -18,44 +18,26 @@ router.post('/addUser', async (req, res) => {
     // ----------------- Checks -------------------
 
     // Check that the identity card contains exactly 9 digits
-
     if (!/^\d{9}$/.test(req.body.ID)) {
-      const errorMessage = 'ID must contain exactly 9 digits.';
-       console.error(errorMessage);
-       return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+      return res.status(400).json({ error: 'ID must contain exactly 9 digits.' });
     }
 
     // Check if the ID already exists in the database
-
     const existingID = await User.findOne({ ID: req.body.ID });
     if (existingID) {
-      // If the ID already exists, display an error message
-      const errorMessage = 'ID already exists. Please choose a different ID.';
-      console.error(errorMessage);
-      // Display an alert with the error message
-      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+      return res.status(400).json({ error: 'ID already exists. Please choose a different ID.' });
     }
 
     // Check if the email already exists in the database
-
     const existingEmail = await User.findOne({ Email: req.body.Email });
     if (existingEmail) {
-      // If the email already exists, display an error message
-      const errorMessage = 'Email already exists. Please choose a different email.';
-      console.error(errorMessage);
-      // Display an alert with the error message
-      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+      return res.status(400).json({ error: 'Email already exists. Please choose a different email.' });
     }
 
     // Check if the phone number already exists in the database
-
     const existingPhone = await User.findOne({ Phone: req.body.Phone });
     if (existingPhone) {
-      // If the phone number already exists, display an error message
-      const errorMessage = 'Phone number already exists. Please choose a different phone number.';
-      console.error(errorMessage);
-      // Display an alert with the error message
-      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+      return res.status(400).json({ error: 'Phone number already exists. Please choose a different phone number.' });
     }
 
     // Check that the user is over 18 years old
@@ -65,20 +47,20 @@ router.post('/addUser', async (req, res) => {
     const userBirthYear = birthday.getFullYear();
 
     if (userBirthYear > minBirthYear) {
-      const errorMessage = 'You must be at least 18 years old to register.';
-      console.error(errorMessage);
-      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
+      return res.status(400).json({ error: 'You must be at least 18 years old to register.' });
     }
 
     // Check if the gender field is provided
     if (!req.body.Gender) {
-      const errorMessage = 'You must fill in what your gender is.';
-      console.error(errorMessage);
-      return res.send(`<script>alert('${errorMessage}'); window.location.href='/signup'</script>`);
-}
+      return res.status(400).json({ error: 'You must fill in what your gender is.' });
+    }
 
-    // ----------------- Add after hecking and everything is ok -------------------
+    // Check if password is a number
+    if (!/^\d+$/.test(req.body.Password)) {
+      return res.status(400).json({ error: 'Password can only contain digits.' });
+    }
 
+    // ----------------- Add after checking everything is ok -------------------
 
     // Save the user to the database 
     const user = new User({
@@ -91,14 +73,17 @@ router.post('/addUser', async (req, res) => {
       Birthday: req.body.Birthday,
       Gender: req.body.Gender,
     });
+
     await user.save();
     console.log('User added successfully');
-    res.redirect('/Welcome');
+    res.status(200).json({ message: 'User registered successfully' });
+
   } catch (error) {
     console.error('Error adding user:', error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
 
 // ------------- get all users --------------
 
@@ -116,16 +101,16 @@ router.get('/users', async (req, res) => {
 
 router.get('/user', async (req, res) => {
   try {
-      const Email = req.query.Email; // אימייל המשתמש שנשלח בבקשה
-      const user = await User.findOne({ Email: Email }); // מציאת המשתמש במסד הנתונים על פי האימייל
+      const Email = req.query.Email; 
+      const user = await User.findOne({ Email: Email }); 
       if (user) {
-          res.json(user); // שליחת המשתמש כתשובה בפורמט JSON
+          res.json(user); 
       } else {
-          res.status(404).send('User not found'); // אם המשתמש לא נמצא, שליחת תשובת שגיאה
+          res.status(404).send('User not found'); 
       }
   } catch (error) {
       console.error('Error fetching user data:', error);
-      res.status(500).send('Internal Server Error'); // שליחת תשובת שגיאה פנימית
+      res.status(500).send('Internal Server Error'); 
   }
 });
 // ------------- update user --------------
@@ -134,6 +119,14 @@ router.post('/update-user', async (req, res) => {
   const { ID, FirstName, LastName, Email, Password, Phone, Birthday, gender } = req.body;
 
   try {
+
+    // Check if password is number
+
+    if (!/^\d+$/.test(Password)) {
+      let errorMessage = 'Password can only contain digits';
+      console.error(errorMessage);
+      return res.send(`<script>alert('${errorMessage}'); window.location.href='/edit'</script>`);
+   }
 
   // Check for age over 18   
 
@@ -181,18 +174,35 @@ router.post('/update-user', async (req, res) => {
   }
 });
 
+// --------------- Delete user from DB ---------------
 
-   // --------------- Delete user from DB ---------------
-   
+const adminUserIDs = ['670fc628cb2a085da968d384' ,'6700ffb387ba434b1702447f' ,'670ea165d2ad8879fd5c4d05', '670ea6de6cdac1d9d49bbfb5'];
+
 router.delete('/DeleteUser/:UserID', async (req, res) => {
   try {
-    const UserID = req.params.UserID;
-    await User.findByIdAndDelete(UserID);
-    res.status(200).send('User deleted successfully');
+    const userIdToDelete = req.params.UserID;
+    const currentUserId = req.body.currentUserId; 
+    const userToDelete = await User.findById(userIdToDelete);
+
+    if (!userToDelete) {
+      return res.status(404).send('User not found');
+    }
+    if (adminUserIDs.includes(userIdToDelete)) {
+      return res.status(403).send('You cannot delete another admin.');
+    }
+    if (userIdToDelete === currentUserId) {
+      return res.status(403).send('You cannot delete yourself from this page. Please delete your account from your profile page.');
+    }
+    await User.findByIdAndDelete(userIdToDelete);
     console.log('User deleted successfully');
+
+    const deletedAssets = await Asset.deleteMany({ Email: userToDelete.Email, Available: true });
+    console.log(`Deleted ${deletedAssets.deletedCount} active assets for user ${userToDelete.Email}`);
+
+    res.status(200).send(`User and their active assets deleted successfully`);
   } catch (error) {
-    console.error('Error deleting user:', error);
-    res.status(500).send('Failed to delete user');
+    console.error('Error deleting user and their assets:', error);
+    res.status(500).send('Failed to delete user and their assets');
   }
 });
 
@@ -210,7 +220,7 @@ router.post('/login', async (req, res) => {
     if (loguser) {
 
       // Retrieve user's role based on email and ID
-      if (loguser.id === '660360e03bd8ee6951acea72' || loguser.id === '65f5c45d1ade009485b849df') {
+      if (loguser.id === '670fc628cb2a085da968d384') {
         res.redirect('/admin?Email=' + loguser.Email);
       } else {
         // Redirect to the customer index page and pass the first name as a query parameter in the URL
@@ -246,7 +256,12 @@ router.post('/reset-password', async (req, res) => {
     console.error(errorMessage);
     res.send(`<script>alert('${errorMessage}'); window.location.href='/reset'</script>`);
     }
-    else
+    else if (!/^\d+$/.test(req.body.newPassword)) {
+      const errorMessage = 'Password can only contain digits';
+      console.error(errorMessage);
+      res.send(`<script>alert('${errorMessage}'); window.location.href='/reset'</script>`);
+    }
+     else
     {
     // update password
     await User.updateOne({ ID: ID, Email: Email }, { Password: newPassword });
@@ -257,6 +272,7 @@ router.post('/reset-password', async (req, res) => {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
+
 });
 
 //  ------------------------------------------ ASSETS -----------------------------------------------
@@ -400,6 +416,63 @@ router.delete('/DeleteAsset/:AssetID', async (req, res) => {
   }
 });
 
+// ----------- Adds trade to DB ------------
+
+router.post('/addTrade', async (req, res) => {
+  const trade = new Trade({
+    TransDate: req.body.TransDate,
+    TransTime: req.body.TransTime,
+    AssetID : req.body.AssetID,
+    SellerEmail: req.body.SellerEmail,
+    BuyerEmail: req.body.BuyerEmail,
+  });
+
+  try {   
+      // Save the Trade to the database
+      await trade.save();
+      console.log('Trade added successfully'); 
+      // Send a response back to the client-side to handle the confirmation
+      res.status(200).json({ success: true }); // Sending a success response
+
+  } catch (error) {
+    console.error('An error occurred while adding the trade:', error);
+    res.status(500).json({ success: false, error: 'An error occurred while adding the trade' }); // Sending an error response
+  }
+});
+
+// --------- SHOW TRADES -----------
+
+router.get('/user-trades', async (req, res) => {
+  const userEmail = req.query.Email; // get the email from the query parameters
+  try {
+    const userTrades = await Trade.aggregate([
+      {
+        $match: {
+          $or: [
+            { BuyerEmail: userEmail },
+            { SellerEmail: userEmail }
+          ]
+        }
+      },
+      {
+        $lookup:
+          {
+            from: "assets",
+            localField: "AssetID",
+            foreignField: "_id",
+            as: "asset_info"
+          }
+      }
+    ]);
+    if (!userTrades || userTrades.length === 0) { // Check if userTrades is empty
+      throw new Error('No trades found for this user');
+    }
+    res.json(userTrades);
+  } catch (error) {
+    console.error('Error fetching user trades:', error);
+    res.status(500).json({ error: 'Failed to fetch user trades' });
+  }
+});
 
 //  ---------------------------------------------- TRADES ----------------------------------------------------
 

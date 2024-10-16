@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const Asset = require('./backend/models/asset');
 const mongoose = require('mongoose');
 require('./tweet.js');
-
 const app = express();
 
 // Connect to MongoDB____________________________________________________________________________
@@ -18,7 +18,6 @@ mongoose.connect('mongodb+srv://ClickTrust:1111@clicktrust.4k9ne3a.mongodb.net/C
         console.error('Error connecting to MongoDB:', error);
     });
 //_______________________________________________________________________________________________
-
 
 // Parse JSON data
 app.use(bodyParser.json());
@@ -39,3 +38,22 @@ const port = 3300;
 app.listen(port, function () {
     console.log("Server started on port", port);
 });
+
+//_______________________________________________________________________________________________
+// Schedule task to mark expired assets as unavailable
+
+async function markExpiredAssets() {
+    console.log('Checking for expired assets on server startup...');
+    const today = new Date();
+    
+    try {
+        const result = await Asset.updateMany(
+            { Date: { $lt: today }, Available: true },
+            { $set: { Available: false } }
+        );
+        console.log(`Updated ${result.modifiedCount} assets to unavailable.`);
+    } catch (error) {
+        console.error('Error updating expired assets:', error);
+    }
+}
+markExpiredAssets();

@@ -18,11 +18,10 @@
     </div>
     <nav>
         <div class="nav-bar">
-        <a href="manageUsers.html">Manage Users</a>
-        <a href="manageAssest.html">Manage Asset</a>
-        <a href="AddProduct.html">Add Asset</a>
-        <a href="History.html">History</a>
-        <a href="SignUp.html">Log Out</a>
+          <a href="manageUsers.html">Manage Users</a>
+          <a href="manageAssest.html">Manage Assets</a>
+          <a href="BI.html">BI</a>
+          <a href="SignUp.html">Log Out</a>
         </div>
     </nav>
     <div class="logo">
@@ -88,7 +87,7 @@
     let homePageUrl;
     if (Email === null) { 
       homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-    } else if (Email === 'afik101297@gmail.com' || Email === 'adire7399@gmail.com') {
+    } else if (Email === 'adire7399@gmail.com') {
       homePageUrl = '/admin?Email=' + Email;
     } else {
       homePageUrl = '/customer?Email=' + Email;
@@ -223,5 +222,6 @@ function clearFilters() {  // Clear the sorts
   });
 
 </script>
+
 </body>
 </html>

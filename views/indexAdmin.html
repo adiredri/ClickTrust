@@ -18,6 +18,7 @@
     <div class="top-section">
     <nav>
         <div class="nav-bar">
+          <a href="BI.html"> BI</a>
           <a href="manageContact.html">Customer Service</a>
           <a href="manageUsers.html">Manage Users</a>
         <a href="manageAssest.html">Manage Assets</a>
@@ -126,8 +127,8 @@
     <input type="text" id="Category" oninput="filterAssets()">
   </div>
   <div class="price-slider" style="margin-right: 50px;">
-    <label for="price">Max Price: <output for="price" id="price-value">250</output></label><br>
-    <input type="range" id="price" name="price" min="0" max="5000" value="200" onclick="filterAssets()">
+    <label for="price">Max Price: <output for="price" id="price-value">1000</output></label><br>
+    <input type="range" id="price" name="price" min="0" max="5000" value="1000" onclick="filterAssets()">
 </div>
 <div style="display: flex; align-items: center; margin-right: 30px;">
   <label for="Sort" style="margin-right: 10px;">Sort Price</label>
@@ -225,7 +226,7 @@ const priceSlider = document.getElementById("price");
 const priceValue = document.getElementById("price-value");
 
 priceSlider.addEventListener("input", function() {
-    priceValue.textContent = this.value; // הצגת חצי הערך שנבחר
+    priceValue.textContent = this.value; 
 });
 </script>
 <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
