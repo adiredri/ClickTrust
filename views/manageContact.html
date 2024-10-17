@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ManageContacts</title>
+    <link rel="icon" href="images/Logo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles/manage.css">
 </head>
 <body>
@@ -58,11 +59,11 @@
     <table>
         <thead>
           <tr style="color: white;">
-            <th style="width: 30%">ID Massege</th>
+            <th style="width: 30%">ID Message</th>
             <th style="width: 40%">Name</th>
             <th style="width: 50%">Email</th>
             <th style="width: 30%">Phone</th>
-            <th style="width: 200%">Massege</th>
+            <th style="width: 200%">Message</th>
             <th style="width: 25%">Delete</th>
           </tr>
         </thead>
@@ -87,7 +88,7 @@
     let homePageUrl;
     if (Email === null) { 
       homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-    } else if (Email === 'adire7399@gmail.com') {
+    } else if (Email === 'edwink.k01@gmail.com' || Email === 'adire7399@gmail.com' || Email === 'Nogga.ovadya@gmail.com' || Email === 'y.itzkovitch@gmail.com') {
       homePageUrl = '/admin?Email=' + Email;
     } else {
       homePageUrl = '/customer?Email=' + Email;
@@ -101,10 +102,27 @@
 
 
 <script>
-    async function DeleteContcat(event, ContactID) {
+    async function DeleteContcat(event, ContactID, name, email) {
       try {
         event.preventDefault(); // Prevent default button action (e.g., form submission)
-        if (confirm('Are you sure you want to delete this massege?')) {
+        if (confirm('Are you sure you want to delete this Message?')) {
+          const webhookUrl = "https://hook.eu1.make.com/c7mu9cvskr5dminwe86deb3tm96i6tpl";
+          const payload = {
+              message: "Button was pressed!",
+              timestamp: new Date().toISOString(),
+              name1: name,
+              email1: email
+          };
+
+          fetch(webhookUrl, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(payload),
+          })
+          .then(response => response.json())
+
           const response = await fetch(`/DeleteContact/${ContactID}`, {
             method: 'DELETE'
           });
@@ -160,7 +178,7 @@ function renderContacts(contacts) {
       <td style="width: 30%">${contact.Phone}</td>
       <td style="width: 200%">${contact.Massege}</td>
       <td style="width: 25%">
-      <button class="delete-button" onclick="DeleteContcat(event, '${contact._id}')">Delete</button>
+      <button class="delete-button" onclick="DeleteContcat(event, '${contact._id}', '${contact.Name}', '${contact.Email}')">Delete</button>
       </td>
     `;
 
