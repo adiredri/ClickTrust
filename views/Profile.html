@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="icon" href="images/Logo.png" type="image/x-icon">
     <link rel="stylesheet" href="styles/Profile.css">
 </head>
 <body>
@@ -81,8 +82,8 @@ const Email = sessionStorage.getItem('Email');
 let homePageUrl;
     if (Email === null) { 
           homePageUrl = '/index'; // Set home page URL to '/index' when email is null
-    } else if (Email === 'adire7399@gmail.com') {
-          homePageUrl = '/admin?Email=' + Email;
+        } else if (Email === 'adire7399@gmail.com') {
+            homePageUrl = '/admin?Email=' + Email;
     } else {
           homePageUrl = '/customer?Email=' + Email;
     }

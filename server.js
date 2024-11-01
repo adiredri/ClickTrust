@@ -6,7 +6,9 @@ const mongoose = require('mongoose');
 require('./tweet.js');
 const app = express();
 
-// Connect to MongoDB____________________________________________________________________________
+// ____________________________________________________________________________
+// Connect to MongoDB
+
 mongoose.connect('mongodb+srv://ClickTrust:1111@clicktrust.4k9ne3a.mongodb.net/ClickTrust', {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -57,3 +59,4 @@ async function markExpiredAssets() {
     }
 }
 markExpiredAssets();
+
