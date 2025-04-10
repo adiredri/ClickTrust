@@ -1,45 +1,90 @@
-# ClickTrust
+# ClickTrust – Digital Asset Trading System
 
+ClickTrust is a full-stack information system designed to manage the trading of **digital assets**.  
+Built as my final project during my Computer Science degree, this system aims to automate and streamline processes related to buying, selling, and managing assets such as event tickets, service subscriptions, digital products, and more.
 
-### About
-My final project as part of my first degree deals with the analysis, design and establishment of an information system for managing trading in digital assets. <br>
-Digital asset trading deals with buying, selling and managing different assets from different categories through digital platforms on the internet. <br>
-This includes event tickets, service subscriptions, digital products and more. Digital assets can be bought and sold quickly and conveniently through systems and websites, and there is no need for physical meetings. <br>
-The field offers great flexibility and the possibility of adding digital assets to an investment portfolio or for personal enjoyment. <br>
+ClickTrust combines powerful backend logic with a modern, responsive user interface to ensure users can manage digital assets efficiently and securely – without requiring physical interaction.
 
-### Goals
+---
 
-* Automation and efficiency in trading management - to develop a system that provides automation in managing the processes of trading in digital assets. 
-This can include verification processes, inventory management, order management and more, which will improve operational efficiency.
-* Improving the user experience - create a convenient and friendly user interface that helps users navigate the system, perform actions easily and receive information in a clear and structured way.
-* Information security and privacy - develop a system that guarantees maximum information security and privacy for connected users, including authentication mechanisms and limiting access to information.
-* Recruiting and managing digital assets - enable users to manage, buy and sell digital assets easily and simply, while ensuring transparency and reliability in the trading process.
+## Project Objectives
 
-### Tools & Languages 
+- **Automation of Trading Workflows**  
+  Implement inventory management, order processing, and asset verification through automated logic to reduce manual intervention.
 
-<div style="display: flex; align-items: flex-start; align: center">
+- **User-Centered Interface**  
+  A clean, intuitive UI allows users to easily navigate the platform, execute trades, and manage assets with clarity.
+
+- **Data Privacy & Security**  
+  Integration of authentication mechanisms and role-based access control to ensure user data is protected at all times.
+
+- **Digital Asset Marketplace**  
+  Users can register assets, browse listings, and execute secure transactions in a transparent, reliable environment.
+
+---
+
+## Tech Stack
+
 <table align="center">
   <tr>
-      <td align="center"  width="96">
-        <img src="https://skillicons.dev/icons?i=html" width="48" height="48" alt="HTML5" />
-      <br>HTML5
+    <td align="center" width="100">
+      <img src="https://skillicons.dev/icons?i=html" width="48" height="48"/><br>HTML5
     </td>
-        <td align="center" width="96">
-        <img src="https://skillicons.dev/icons?i=css" width="48" height="48" alt="css" />
-      <br>CSS
+    <td align="center" width="100">
+      <img src="https://skillicons.dev/icons?i=css" width="48" height="48"/><br>CSS3
     </td>
-    <td align="center" width="96">
-        <img src="https://techstack-generator.vercel.app/js-icon.svg" alt="icon" width="65" height="65" />
-      <br>JavaScript
+    <td align="center" width="100">
+      <img src="https://techstack-generator.vercel.app/js-icon.svg" width="48" height="48"/><br>JavaScript
     </td>
-    <td align="center" width="96">
-        <img src="https://skillicons.dev/icons?i=nodejs" width="48" height="48" alt="Nodejs" />
-      <br>Nodejs
-      </td>
-    <td align="center" width="96">
-        <img src="https://skillicons.dev/icons?i=mongodb" width="48" height="48" alt="MongoDB" />
-      <br>MongoDB
+    <td align="center" width="100">
+      <img src="https://skillicons.dev/icons?i=nodejs" width="48" height="48"/><br>Node.js
+    </td>
+    <td align="center" width="100">
+      <img src="https://skillicons.dev/icons?i=mongodb" width="48" height="48"/><br>MongoDB
     </td>
   </tr>
 </table>
-</div>
+
+---
+
+## Features
+
+- User registration and authentication (login system)
+- Secure digital asset registration and management
+- Order placement and automated processing
+- Admin dashboard for asset and user management
+- RESTful API integration (Node.js + Express)
+- Persistent storage using MongoDB
+- Responsive front-end design (HTML/CSS/JS)
+
+---
+
+## Project Structure
+
+```
+ClickTrust/
+├── backend/           # Node.js + Express server
+│   └── routes/
+│   └── models/
+│   └── controllers/
+├── frontend/          # Static frontend (HTML/CSS/JS)
+│   └── pages/
+│   └── assets/
+├── database/          # MongoDB scripts and data samples
+└── README.md
+```
+
+---
+
+## Getting Started
+
+To run this project locally:
+
+```bash
+git clone https://github.com/adiredri/ClickTrust.git
+cd ClickTrust
+npm install
+npm start
+```
+
+Make sure MongoDB is running locally or update the connection string in the environment variables.
