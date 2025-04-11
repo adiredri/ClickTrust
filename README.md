@@ -47,7 +47,7 @@ ClickTrust combines powerful backend logic with a modern, responsive user interf
 
 ---
 
-## Features
+## Features 
 
 - User registration and authentication (login system)
 - Secure digital asset registration and management
