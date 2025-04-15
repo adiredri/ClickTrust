@@ -1,4 +1,4 @@
-# ClickTrust – Digital Asset Trading System
+# ClickTrust – Digital Asset Trading System 
 
 ClickTrust is a full-stack information system designed to manage the trading of **digital assets**.  
 Built as my final project during my Computer Science degree, this system aims to automate and streamline processes related to buying, selling, and managing assets such as event tickets, service subscriptions, digital products, and more.
